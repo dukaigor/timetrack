@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Evidență Lucrători – Time & Attendance (LocalStorage)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f172a; /* slate-900 */
+      --card:#111827; /* gray-900 */
+      --muted:#94a3b8; /* slate-400 */
+      --text:#e5e7eb; /* gray-200 */
+      --accent:#22c55e; /* green-500 */
+      --accent-2:#3b82f6; /* blue-500 */
+      --danger:#ef4444; /* red-500 */
+      --warning:#f59e0b; /* amber-500 */
+      --ring:0 0 0 3px rgba(59,130,246,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,'Noto Sans','Apple Color Emoji','Segoe UI Emoji';
+      background:linear-gradient(180deg,#0b1020,#0f172a 50%,#0b1020);color:var(--text)}
+    .container{max-width:1100px;margin:32px auto;padding:0 16px}
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:16px}
+    .title{font-size:20px;font-weight:700;letter-spacing:.2px}
+    .badge{font-size:12px;padding:4px 8px;border-radius:999px;background:#1f2937;color:#9ca3af}
+    .card{background:rgba(17,24,39,.8);backdrop-filter: blur(8px);border:1px solid rgba(255,255,255,.06);
+      border-radius:var(--radius);padding:16px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{appearance:none;border:1px solid rgba(255,255,255,.08);background:#0b1224;color:#cbd5e1;
+      padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:600}
+    .tab.active{background:linear-gradient(180deg,#0e162d,#0b1224);border-color:rgba(59,130,246,.35);box-shadow:var(--ring)}
+    .grid{display:grid;gap:16px}
+    @media(min-width:900px){.grid-2{grid-template-columns:1fr 1fr}}
+    label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+    input,select,button,textarea{font-family:inherit}
+    .input{width:100%;background:#0b1224;border:1px solid rgba(255,255,255,.08);color:var(--text);
+      padding:10px 12px;border-radius:12px;outline:none}
+    .input:focus{border-color:rgba(59,130,246,.35);box-shadow:var(--ring)}
+    .btn{appearance:none;border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer}
+    .btn.primary{background:linear-gradient(180deg,#2563eb,#1d4ed8);color:white}
+    .btn.success{background:linear-gradient(180deg,#22c55e,#16a34a);color:white}
+    .btn.warn{background:linear-gradient(180deg,#f59e0b,#d97706);color:#111}
+    .btn.ghost{background:#0b1224;color:#cbd5e1;border:1px solid rgba(255,255,255,.08)}
+    .btn.danger{background:linear-gradient(180deg,#ef4444,#dc2626);color:white}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .row{display:flex;gap:8px;align-items:end;flex-wrap:wrap}
+    .spacer{flex:1}
+    .muted{color:var(--muted)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
+    th{font-size:12px;color:#93c5fd;text-transform:uppercase;letter-spacing:.08em}
+    .kpi{display:flex;gap:12px;align-items:center}
+    .kpi h3{margin:0;font-size:28px}
+    .pill{padding:4px 8px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,.08);font-size:12px;color:#cbd5e1}
+    .hr{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);margin:14px 0}
+    .footer{margin-top:18px;font-size:12px;color:var(--muted)}
+    .link{color:#93c5fd;text-decoration:none}
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.35);color:#bfdbfe;font-size:12px}
+    .hidden{display:none !important}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:38px;height:38px;border-radius:10px;background:radial-gradient(60% 60% at 30% 20%, #93c5fd, transparent),radial-gradient(60% 60% at 80% 70%, #22c55e, transparent);border:1px solid rgba(255,255,255,.15);"></div>
+        <div>
+          <div class="title">Evidență Lucrători — Time & Attendance (offline)</div>
+          <div class="muted" style="font-size:12px">Datele sunt salvate local (LocalStorage). Export/Import pentru backup.</div>
+        </div>
+      </div>
+      <span class="badge" id="version"></span>
+    </header>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" id="tab-dashboard" onclick="switchTab('dashboard')">Panou lucru</button>
+      <button class="tab" id="tab-admin" onclick="switchTab('admin')">Admin</button>
+      <button class="tab" id="tab-reports" onclick="switchTab('reports')">Rapoarte</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="card" role="tabpanel" aria-labelledby="tab-dashboard">
+      <div class="grid grid-2">
+        <div>
+          <h2 style="margin:0 0 8px 0">Pontaj rapid</h2>
+          <div class="row">
+            <div style="min-width:220px;flex:1">
+              <label>Lucrător</label>
+              <select id="dash-employee" class="input"></select>
+            </div>
+            <button class="btn success" id="btn-clock" onclick="toggleClock()">Înregistrează intrarea</button>
+            <button class="btn ghost" onclick="addNowEntryForAll()" title="Intrare pentru toți activii">Intrare toți</button>
+            <div class="spacer"></div>
+          </div>
+
+          <div class="hr"></div>
+          <div class="kpi">
+            <div>
+              <div class="muted" style="font-size:12px">Stare</div>
+              <h3 id="kpi-state">—</h3>
+            </div>
+            <span class="pill" id="kpi-live">Durată curentă: 00:00</span>
+            <span class="pill" id="kpi-last">Ultima sesiune: —</span>
+          </div>
+          <div class="footer">Sfat: poți lăsa aplicația deschisă; timerul se actualizează în timp real.</div>
+        </div>
+
+        <div>
+          <h2 style="margin:0 0 8px 0">Pontajul de azi (selectat)</h2>
+          <table>
+            <thead>
+              <tr><th>Data</th><th>Start</th><th>Stop</th><th>Durată</th><th></th></tr>
+            </thead>
+            <tbody id="today-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="view-admin" class="card hidden" role="tabpanel" aria-labelledby="tab-admin">
+      <h2 style="margin-top:0">Administrează lucrători</h2>
+      <div class="grid grid-2">
+        <div>
+          <div class="row">
+            <div style="flex:1;min-width:180px">
+              <label>Nume</label>
+              <input id="emp-name" class="input" placeholder="ex: Ion Popescu" />
+            </div>
+            <div style="flex:1;min-width:160px">
+              <label>Funcția (opțional)</label>
+              <input id="emp-role" class="input" placeholder="ex: Operator" />
+            </div>
+            <div style="width:140px">
+              <label>Tarif/oră (opțional)</label>
+              <input id="emp-rate" type="number" min="0" step="0.01" class="input" placeholder="ex: 5" />
+            </div>
+            <button class="btn primary" onclick="createEmployee()">Adaugă</button>
+          </div>
+
+          <div class="hr"></div>
+          <table>
+            <thead>
+              <tr><th>Nume</th><th>Funcția</th><th>Tarif</th><th>Stare</th><th style="width:210px">Acțiuni</th></tr>
+            </thead>
+            <tbody id="emp-rows"></tbody>
+          </table>
+
+          <div class="row" style="margin-top:14px">
+            <button class="btn ghost" onclick="exportData()">Exportă Backup (.json)</button>
+            <label class="btn ghost" for="import-file" style="cursor:pointer">Importă Backup</label>
+            <input id="import-file" type="file" accept="application/json" class="hidden" />
+            <button class="btn warn" onclick="resetAll()">Resetare totală</button>
+            <div class="spacer"></div>
+            <span class="chip">Total lucrători: <b id="emp-count" style="margin-left:6px">0</b></span>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="margin:0 0 8px 0">Intrări rapide (manual)</h3>
+          <div class="row">
+            <div style="flex:1;min-width:220px">
+              <label>Lucrător</label>
+              <select id="manual-employee" class="input"></select>
+            </div>
+            <div style="width:170px">
+              <label>Data</label>
+              <input id="manual-date" type="date" class="input" />
+            </div>
+            <div style="width:130px">
+              <label>Start</label>
+              <input id="manual-start" type="time" class="input" />
+            </div>
+            <div style="width:130px">
+              <label>Stop</label>
+              <input id="manual-end" type="time" class="input" />
+            </div>
+            <button class="btn primary" onclick="addManualEntry()">Adaugă sesiune</button>
+          </div>
+          <div class="footer">Pentru zile trecute sau corecții (nu se suprapun peste o sesiune activă).</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section id="view-reports" class="card hidden" role="tabpanel" aria-labelledby="tab-reports">
+      <h2 style="margin-top:0">Rapoarte</h2>
+      <div class="row">
+        <div style="min-width:220px;flex:1">
+          <label>Lucrător</label>
+          <select id="rep-employee" class="input"></select>
+        </div>
+        <div style="min-width:220px">
+          <label>Perioadă</label>
+          <select id="rep-range" class="input" onchange="toggleCustomDates()">
+            <option value="thisWeek">Săptămâna aceasta</option>
+            <option value="lastWeek">Săptămâna trecută</option>
+            <option value="thisMonth" selected>Luna aceasta</option>
+            <option value="lastMonth">Luna trecută</option>
+            <option value="thisYear">Anul acesta</option>
+            <option value="custom">Personalizat</option>
+          </select>
+        </div>
+        <div id="rep-custom" class="row hidden" style="min-width:360px">
+          <div style="width:170px">
+            <label>De la</label>
+            <input id="rep-from" type="date" class="input" />
+          </div>
+          <div style="width:170px">
+            <label>Până la</label>
+            <input id="rep-to" type="date" class="input" />
+          </div>
+        </div>
+        <button class="btn primary" onclick="runReport()">Generează</button>
+        <button class="btn ghost" onclick="exportCSV()">Export CSV</button>
+        <button class="btn ghost" onclick="window.print()">Print</button>
+        <div class="spacer"></div>
+      </div>
+
+      <div class="hr"></div>
+      <div id="rep-summary" class="kpi" style="flex-wrap:wrap"></div>
+
+      <div class="hr"></div>
+      <table>
+        <thead>
+          <tr><th>Lucrător</th><th>Data</th><th>Start</th><th>Stop</th><th>Durată</th></tr>
+        </thead>
+        <tbody id="rep-rows"></tbody>
+      </table>
+    </section>
+
+    <div class="footer">Creat pentru uz local. Pentru server multi‑utilizator (rețea & logare), se poate extinde ulterior (API/DB).
+      <a class="link" href="#" onclick="alert('Sugestie: exportă backup periodic .json')">Sugestie backup</a></div>
+  </div>
+
+  <script>
+    // =============== Storage & Data Model ===============
+    const APP_KEY = 'tna_v1';
+    const APP_VERSION = 'v1.0.0';
+    const now = () => new Date();
+    const fmtDate = (d)=> new Intl.DateTimeFormat('ro-RO',{year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+    const fmtTime = (d)=> new Intl.DateTimeFormat('ro-RO',{hour:'2-digit',minute:'2-digit',hour12:false}).format(d);
+
+    const load = () => {
+      const raw = localStorage.getItem(APP_KEY);
+      if(!raw) return { employees: [], entries: [], lastEmployeeId: null };
+      try{ return JSON.parse(raw);}catch{ return { employees: [], entries: [], lastEmployeeId: null };}
+    };
+    const save = (data) => localStorage.setItem(APP_KEY, JSON.stringify(data));
+    let db = load();
+
+    const gid = () => Math.random().toString(36).slice(2,10);
+
+    function upsertEmployee(emp){
+      const i = db.employees.findIndex(e=>e.id===emp.id);
+      if(i>=0) db.employees[i]=emp; else db.employees.push(emp);
+      save(db); renderEmployees(); populateEmployeeSelects(); refreshDashboard();
+    }
+
+    function addEntry(entry){
+      db.entries.push(entry); save(db);
+    }
+
+    function updateEntry(entry){
+      const i = db.entries.findIndex(en=>en.id===entry.id);
+      if(i>=0) db.entries[i]=entry; save(db);
+    }
+
+    function removeEntry(id){
+      db.entries = db.entries.filter(e=>e.id!==id); save(db); refreshDashboard(); runReport();
+    }
+
+    function activeEntryFor(empId){
+      return db.entries.find(e=>e.employeeId===empId && e.end==null);
+    }
+
+    function entriesFor(empId){
+      return db.entries.filter(e=>e.employeeId===empId);
+    }
+
+    function todayEntriesFor(empId){
+      const t = new Date(); t.setHours(0,0,0,0);
+      const u = new Date(t); u.setDate(u.getDate()+1);
+      return db.entries.filter(e=>e.employeeId===empId && new Date(e.start)>=t && new Date(e.start)<u);
+    }
+
+    // =============== UI Helpers ===============
+    function switchTab(tab){
+      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+      document.getElementById('tab-'+tab).classList.add('active');
+      document.querySelectorAll('[id^=view-]').forEach(v=>v.classList.add('hidden'));
+      document.getElementById('view-'+tab).classList.remove('hidden');
+      if(tab==='reports') runReport();
+      if(tab==='dashboard') refreshDashboard();
+      if(tab==='admin') renderEmployees();
+    }
+
+    function populateEmployeeSelects(){
+      const selects = [document.getElementById('dash-employee'), document.getElementById('manual-employee'), document.getElementById('rep-employee')];
+      const options = db.employees.map(e=>`<option value="${e.id}">${e.name}${e.active===false?' (inactiv)':''}</option>`).join('');
+      selects.forEach(sel=>{
+        const includeAll = sel.id==='rep-employee';
+        sel.innerHTML = includeAll ? `<option value="all">Toți</option>${options}` : options;
+      });
+      // Restore last selection
+      if(db.lastEmployeeId && db.employees.some(e=>e.id===db.lastEmployeeId)){
+        document.getElementById('dash-employee').value = db.lastEmployeeId;
+      }
+    }
+
+    // =============== Dashboard (Clock In/Out) ===============
+    function toggleClock(){
+      const empId = document.getElementById('dash-employee').value;
+      if(!empId){ alert('Selectează un lucrător.'); return; }
+      const active = activeEntryFor(empId);
+      if(active){
+        active.end = now().toISOString();
+        updateEntry(active);
+      } else {
+        addEntry({ id: gid(), employeeId: empId, start: now().toISOString(), end: null });
+      }
+      db.lastEmployeeId = empId; save(db);
+      refreshDashboard(); runReport();
+    }
+
+    function addNowEntryForAll(){
+      const activeIds = db.employees.filter(e=>e.active!==false).map(e=>e.id);
+      const t = now().toISOString();
+      activeIds.forEach(id=>{
+        if(!activeEntryFor(id)) addEntry({ id: gid(), employeeId: id, start: t, end: null });
+      });
+      refreshDashboard();
+    }
+
+    function refreshDashboard(){
+      const empId = document.getElementById('dash-employee').value || (db.employees[0]?.id || '');
+      if(!empId){ document.getElementById('kpi-state').textContent='—'; return; }
+      const emp = db.employees.find(e=>e.id===empId);
+      const active = activeEntryFor(empId);
+      const btn = document.getElementById('btn-clock');
+      if(active){
+        document.getElementById('kpi-state').textContent = `${emp.name} este ÎN PROGRAM`;
+        btn.textContent = 'Înregistrează ieșirea'; btn.classList.remove('success'); btn.classList.add('danger');
+      } else {
+        document.getElementById('kpi-state').textContent = `${emp.name} este ÎN AFARA PROGRAMULUI`;
+        btn.textContent = 'Înregistrează intrarea'; btn.classList.add('success'); btn.classList.remove('danger');
+      }
+      // Last session
+      const empEntries = entriesFor(empId).filter(e=>e.end!=null).sort((a,b)=>new Date(b.end)-new Date(a.end));
+      const last = empEntries[0];
+      document.getElementById('kpi-last').textContent = last ? `Ultima: ${fmtDate(new Date(last.start))}, ${fmtTime(new Date(last.start))} – ${fmtTime(new Date(last.end))} (${fmtDuration(durationOf(last))})` : 'Ultima sesiune: —';
+      // Today table
+      const rows = todayEntriesFor(empId).sort((a,b)=>new Date(a.start)-new Date(b.start)).map(e=>{
+        const d = new Date(e.start);
+        return `<tr>
+          <td>${fmtDate(d)}</td>
+          <td>${fmtTime(new Date(e.start))}</td>
+          <td>${e.end?fmtTime(new Date(e.end)):'—'}</td>
+          <td>${fmtDuration(durationOf(e))}</td>
+          <td><button class="btn ghost" onclick="editEntry('${e.id}')">Editează</button> <button class="btn ghost" onclick="removeEntry('${e.id}')">Șterge</button></td>
+        </tr>`;
+      }).join('');
+      document.getElementById('today-rows').innerHTML = rows || `<tr><td colspan="5" class="muted">Fără sesiuni azi.</td></tr>`;
+    }
+
+    function editEntry(id){
+      const e = db.entries.find(x=>x.id===id); if(!e) return;
+      const ds = prompt('Data (YYYY-MM-DD):', e.start.slice(0,10)); if(!ds) return;
+      const ts = prompt('Start (HH:MM):', e.start.slice(11,16)); if(!ts) return;
+      const de = prompt('Stop (HH:MM) (lasă gol dacă activ):', e.end? e.end.slice(11,16):'');
+      const start = new Date(`${ds}T${ts}:00`);
+      let end = null;
+      if(de && de.trim()) end = new Date(`${ds}T${de}:00`).toISOString();
+      e.start = start.toISOString(); e.end = end;
+      updateEntry(e); refreshDashboard(); runReport();
+    }
+
+    // =============== Admin (Employees & Manual) ===============
+    function createEmployee(){
+      const name = document.getElementById('emp-name').value.trim();
+      if(!name){ alert('Te rog numele.'); return; }
+      const role = document.getElementById('emp-role').value.trim();
+      const rate = parseFloat(document.getElementById('emp-rate').value||'');
+      const emp = { id: gid(), name, role: role||'', rate: isFinite(rate)? rate: null, active: true };
+      upsertEmployee(emp);
+      document.getElementById('emp-name').value=''; document.getElementById('emp-role').value=''; document.getElementById('emp-rate').value='';
+    }
+
+    function renderEmployees(){
+      const rows = db.employees.map(e=>{
+        return `<tr>
+          <td>${e.name}</td>
+          <td>${e.role||'—'}</td>
+          <td>${e.rate!=null? e.rate.toFixed(2): '—'}</td>
+          <td>${e.active!==false?'<span class="pill">Activ</span>':'<span class="pill" style="background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.35);color:#fecaca">Inactiv</span>'}</td>
+          <td>
+            <button class="btn ghost" onclick="editEmployee('${e.id}')">Editează</button>
+            <button class="btn ghost" onclick="toggleActive('${e.id}')">${e.active!==false?'Dezactivează':'Activează'}</button>
+            <button class="btn danger" onclick="deleteEmployee('${e.id}')">Șterge</button>
+          </td>
+        </tr>`
+      }).join('');
+      document.getElementById('emp-rows').innerHTML = rows || `<tr><td colspan="5" class="muted">Adaugă primul lucrător.</td></tr>`;
+      document.getElementById('emp-count').textContent = db.employees.length;
+      populateEmployeeSelects();
+    }
+
+    function editEmployee(id){
+      const e = db.employees.find(x=>x.id===id); if(!e) return;
+      const name = prompt('Nume:', e.name); if(!name) return;
+      const role = prompt('Funcția (opțional):', e.role||'');
+      const rate = prompt('Tarif/oră (opțional):', e.rate!=null? e.rate: '');
+      e.name = name.trim(); e.role = (role||'').trim(); e.rate = rate!==''? Math.max(0, parseFloat(rate)): null;
+      upsertEmployee(e);
+    }
+
+    function toggleActive(id){
+      const e = db.employees.find(x=>x.id===id); if(!e) return; e.active = !(e.active===false); upsertEmployee(e);
+    }
+
+    function deleteEmployee(id){
+      if(!confirm('Ștergi lucrătorul? (pontajele rămân în istoric)')) return;
+      db.employees = db.employees.filter(e=>e.id!==id); save(db); renderEmployees(); populateEmployeeSelects(); refreshDashboard(); runReport();
+    }
+
+    function addManualEntry(){
+      const empId = document.getElementById('manual-employee').value;
+      const ds = document.getElementById('manual-date').value;
+      const ts = document.getElementById('manual-start').value;
+      const te = document.getElementById('manual-end').value;
+      if(!empId||!ds||!ts||!te){ alert('Completează toate câmpurile.'); return; }
+      const start = new Date(`${ds}T${ts}:00`);
+      const end = new Date(`${ds}T${te}:00`);
+      if(end<=start){ alert('Stop trebuie să fie după start.'); return; }
+      // prevent overlap with active open entry
+      if(activeEntryFor(empId)){ alert('Există o sesiune deschisă. Închide-o înainte de a adăuga manual.'); return; }
+      addEntry({ id: gid(), employeeId: empId, start: start.toISOString(), end: end.toISOString() });
+      refreshDashboard(); runReport();
+      document.getElementById('manual-start').value=''; document.getElementById('manual-end').value='';
+    }
+
+    // =============== Reports ===============
+    function toggleCustomDates(){
+      const v = document.getElementById('rep-range').value;
+      document.getElementById('rep-custom').classList.toggle('hidden', v!== 'custom');
+    }
+
+    function getRange(){
+      const v = document.getElementById('rep-range').value;
+      const d = now();
+      let from, to;
+      const startOfWeek = (date)=>{ const t = new Date(date); const day=(t.getDay()+6)%7; t.setHours(0,0,0,0); t.setDate(t.getDate()-day); return t; } // Monday
+      const endOfDay = (date)=>{ const t=new Date(date); t.setHours(23,59,59,999); return t; };
+
+      if(v==='thisWeek'){ from = startOfWeek(d); to = endOfDay(new Date(startOfWeek(d).getTime()+6*86400000)); }
+      else if(v==='lastWeek'){ const s = new Date(startOfWeek(d).getTime()-7*86400000); from=s; to=endOfDay(new Date(s.getTime()+6*86400000)); }
+      else if(v==='thisMonth'){ from=new Date(d.getFullYear(), d.getMonth(),1); to=endOfDay(new Date(d.getFullYear(), d.getMonth()+1,0)); }
+      else if(v==='lastMonth'){ from=new Date(d.getFullYear(), d.getMonth()-1,1); to=endOfDay(new Date(d.getFullYear(), d.getMonth(),0)); }
+      else if(v==='thisYear'){ from=new Date(d.getFullYear(),0,1); to=endOfDay(new Date(d.getFullYear(),11,31)); }
+      else { // custom
+        const f = document.getElementById('rep-from').value, t = document.getElementById('rep-to').value;
+        if(!f||!t){ alert('Alege intervalul.'); return null; }
+        from = new Date(f+'T00:00:00'); to = endOfDay(new Date(t+'T00:00:00'));
+      }
+      return {from,to};
+    }
+
+    function runReport(){
+      const empSel = document.getElementById('rep-employee').value || 'all';
+      const range = getRange(); if(!range) return;
+      const {from,to} = range;
+      const filtered = db.entries.filter(e=>{
+        const s = new Date(e.start); const en = e.end? new Date(e.end): now();
+        return en>=from && s<=to && (empSel==='all' || e.employeeId===empSel);
+      }).sort((a,b)=> new Date(a.start)-new Date(b.start));
+
+      const rows = filtered.map(e=>{
+        const emp = db.employees.find(x=>x.id===e.employeeId); const d = new Date(e.start);
+        return `<tr>
+          <td>${emp?emp.name:'—'}</td>
+          <td>${fmtDate(d)}</td>
+          <td>${fmtTime(new Date(e.start))}</td>
+          <td>${e.end? fmtTime(new Date(e.end)):'—'}</td>
+          <td>${fmtDuration(durationOf(e))}</td>
+        </tr>`;
+      }).join('');
+      document.getElementById('rep-rows').innerHTML = rows || `<tr><td colspan="5" class="muted">Fără date în perioada aleasă.</td></tr>`;
+
+      // Summary (per employee totals + grand total, + cost if rate provided)
+      const map = new Map();
+      filtered.forEach(e=>{
+        const hrs = durationOf(e);
+        const curr = map.get(e.employeeId)||0; map.set(e.employeeId, curr+hrs);
+      });
+      const items = [];
+      let grand = 0, grandCost = 0;
+      map.forEach((ms, empId)=>{
+        grand += ms; const emp = db.employees.find(x=>x.id===empId);
+        const hours = (ms/3600000);
+        const cost = emp?.rate!=null? hours*emp.rate: null; if(cost!=null) grandCost += cost;
+        items.push(`<span class="pill">${emp?emp.name:'—'} · ${hours.toFixed(2)}h${cost!=null?` · ${cost.toFixed(2)} EUR`:''}</span>`);
+      });
+      const sumHtml = `
+        <div class="kpi"><h3 style="margin:0">Total: ${(grand/3600000).toFixed(2)} ore</h3></div>
+        ${grandCost>0? `<span class="pill">Cost estimat: ${grandCost.toFixed(2)} EUR</span>`:''}
+        <div style="width:100%"></div>
+        ${items.join(' ')}
+      `;
+      document.getElementById('rep-summary').innerHTML = sumHtml;
+    }
+
+    function exportCSV(){
+      const empSel = document.getElementById('rep-employee').value || 'all';
+      const range = getRange(); if(!range) return; const {from,to}=range;
+      const filtered = db.entries.filter(e=>{
+        const s = new Date(e.start); const en = e.end? new Date(e.end): now();
+        return en>=from && s<=to && (empSel==='all' || e.employeeId===empSel);
+      }).sort((a,b)=> new Date(a.start)-new Date(b.start));
+      const head = ['Employee','Date','Start','End','Duration(h)'];
+      const rows = filtered.map(e=>{
+        const emp=db.employees.find(x=>x.id===e.employeeId); const dur=durationOf(e)/3600000;
+        return [emp?emp.name:'', e.start.slice(0,10), e.start.slice(11,16), e.end? e.end.slice(11,16):'', dur.toFixed(2)];
+      });
+      const csv = [head,...rows].map(r=>r.map(x=>`"${(x||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='raport.csv'; a.click(); URL.revokeObjectURL(url);
+    }
+
+    // =============== Utils ===============
+    function durationOf(e){
+      const s = new Date(e.start).getTime(); const en = (e.end? new Date(e.end): now()).getTime();
+      return Math.max(0, en - s);
+    }
+    function fmtDuration(ms){
+      const h = Math.floor(ms/3600000); const m = Math.round((ms%3600000)/60000);
+      const pad=(n)=> String(n).padStart(2,'0');
+      return `${pad(h)}:${pad(m)}`;
+    }
+
+    function exportData(){
+      const blob = new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='time-attendance-backup.json'; a.click(); URL.revokeObjectURL(url);
+    }
+
+    function resetAll(){
+      if(!confirm('Sigur vrei resetare totală?')) return;
+      db = { employees: [], entries: [], lastEmployeeId: null }; save(db); populateEmployeeSelects(); renderEmployees(); refreshDashboard(); runReport();
+    }
+
+    document.getElementById('import-file').addEventListener('change', (ev)=>{
+      const file = ev.target.files?.[0]; if(!file) return;
+      const fr = new FileReader();
+      fr.onload = ()=>{
+        try{ const data = JSON.parse(fr.result);
+          if(!Array.isArray(data.employees) || !Array.isArray(data.entries)) throw new Error('Structură invalidă');
+          db = data; save(db); populateEmployeeSelects(); renderEmployees(); refreshDashboard(); runReport();
+        } catch(err){ alert('Import eșuat: '+err.message); }
+      };
+      fr.readAsText(file);
+    });
+
+    // Live timer
+    setInterval(()=>{
+      const empId = document.getElementById('dash-employee').value;
+      if(!empId) return;
+      const active = activeEntryFor(empId);
+      const pill = document.getElementById('kpi-live');
+      pill.textContent = 'Durată curentă: ' + (active? fmtDuration(durationOf(active)) : '00:00');
+    }, 30000); // update la 30s (suficient pentru UI)
+
+    // Init
+    (function init(){
+      document.getElementById('version').textContent = APP_VERSION + ' • stocat local';
+      if(db.employees.length===0){
+        // Seed example
+        db.employees.push({id: gid(), name:'Exemplu: Ion Popescu', role:'Operator', rate:5, active:true});
+        save(db);
+      }
+      populateEmployeeSelects(); renderEmployees(); refreshDashboard(); runReport();
+      // default dates for custom range
+      const today = new Date(); const fmt = (d)=> d.toISOString().slice(0,10);
+      document.getElementById('rep-from').value = fmt(new Date(today.getFullYear(), today.getMonth(), 1));
+      document.getElementById('rep-to').value = fmt(today);
+    })();
+  </script>
+</body>
+</html>
