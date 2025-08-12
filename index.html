@@ -71,9 +71,6 @@
     .emp-name{font-size:12px;text-align:center;line-height:1.1}
     .status-dot{width:10px;height:10px;border-radius:50%;background:#e2e8f0;border:1px solid #cbd5e1}
     .status-dot.on{background:#22c55e;border-color:#16a34a}
-    /* Modal */
-    .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.25);backdrop-filter:blur(6px)}
-    .modal-card{background:white;border-radius:16px;padding:18px 16px;min-width:300px;border:1px solid var(--card-border);box-shadow:0 15px 40px rgba(15,23,42,.15)}
     .header-row{display:flex;align-items:center;gap:10px}
     .lang{display:flex;gap:8px;align-items:center}
     .lang select{background:white;border:1px solid var(--card-border);border-radius:10px;padding:6px 10px}
@@ -130,8 +127,8 @@
               <div class="muted" style="font-size:12px" data-i18n="status">Stare</div>
               <h3 id="kpi-state">—</h3>
             </div>
-            <span class="pill" id="kpi-live" data-i18n-dyn="live_duration">Durată curentă: 00:00</span>
-            <span class="pill" id="kpi-last" data-i18n-dyn="last_session">Ultima sesiune: —</span>
+            <span class="pill" id="kpi-live">Durată curentă: 00:00</span>
+            <span class="pill" id="kpi-last">Ultima sesiune: —</span>
           </div>
           <div class="footer" data-i18n="tip_timer">Sfat: poți lăsa aplicația deschisă; timerul se actualizează în timp real.</div>
         </div>
@@ -281,7 +278,7 @@
       </table>
     </section>
 
-    <div class="footer" data-i18n="footnote">Creat pentru uz local. Pentru server multi‑utilizator (rețea & logare), se poate extinde ulterior (API/DB).</div>
+    <div class="footer" data-i18n="footnote">Creat pentru uz local. Pentru server multi-utilizator (rețea & logare), se poate extinde ulterior (API/DB).</div>
   </div>
 
   <script type="module">
@@ -306,23 +303,30 @@
   // ===== I18N (RO/IT) =====
   const STR = {
     ro: {
-      app_title:"Evidență Lucrători — Time & Attendance (Firebase)", subtitle:"Datele sunt salvate în Firebase Realtime Database. Export/Import opțional pentru backup local.", lang:"Limbă", tab_dashboard:"Panou lucru", tab_admin:"Admin", tab_reports:"Rapoarte", quick_time:"Pontaj rapid", worker:"Lucrător", btn_checkin:"Înregistrează intrarea", btn_checkin_all:"Intrare toți", status:"Stare", tip_timer:"Sfat: poți lăsa aplicația deschisă; timerul se actualizează în timp real.", today_title:"Pontajul de azi (selectat)", date:"Data", start:"Start", end:"Stop", duration:"Durată", admin_title:"Administrează lucrători", unlock:"Deschide Admin", name:"Nume", role:"Funcția (opțional)", rate:"Tarif/oră (opțional)", rate_short:"Tarif", add:"Adaugă", state:"Stare", actions:"Acțiuni", export_backup:"Exportă Backup (.json)", import_backup:"Importă Backup", reset_all:"Resetare totală", manual_entries:"Intrări rapide (manual)", add_session:"Adaugă sesiune", manual_hint:"Pentru zile trecute sau corecții (nu se suprapun peste o sesiune activă).", autoout_title:"Ieșire automată", autoout_enable:"Activează ieșire automată", autoout_time:"Ora (ex: 18:00)", save:"Salvează", autoout_hint:"Dacă un lucrător nu apasă ieșire, sesiunea se închide automat la ora setată.", reports:"Rapoarte", period:"Perioadă", thisWeek:"Săptămâna aceasta", lastWeek:"Săptămâna trecută", thisMonth:"Luna aceasta", lastMonth:"Luna trecută", thisYear:"Anul acesta", custom:"Personalizat", from:"De la", to:"Până la", generate:"Generează", export_csv:"Export CSV", print:"Print", footnote:"Creat pentru uz local. Pentru server multi‑utilizator (rețea & logare), se poate extinde ulterior (API/DB)."
+      app_title:"Evidență Lucrători — Time & Attendance (Firebase)", subtitle:"Datele sunt salvate în Firebase Realtime Database. Export/Import opțional pentru backup local.", lang:"Limbă", tab_dashboard:"Panou lucru", tab_admin:"Admin", tab_reports:"Rapoarte", quick_time:"Pontaj rapid", worker:"Lucrător", btn_checkin:"Înregistrează intrarea", btn_checkin_all:"Intrare toți", status:"Stare", tip_timer:"Sfat: poți lăsa aplicația deschisă; timerul se actualizează în timp real.", today_title:"Pontajul de azi (selectat)", date:"Data", start:"Start", end:"Stop", duration:"Durată", admin_title:"Administrează lucrători", unlock:"Deschide Admin", name:"Nume", role:"Funcția (opțional)", rate:"Tarif/oră (opțional)", rate_short:"Tarif", add:"Adaugă", state:"Stare", actions:"Acțiuni", export_backup:"Exportă Backup (.json)", import_backup:"Importă Backup", reset_all:"Resetare totală", manual_entries:"Intrări rapide (manual)", add_session:"Adaugă sesiune", manual_hint:"Pentru zile trecute sau corecții (nu se suprapun peste o sesiune activă).", autoout_title:"Ieșire automată", autoout_enable:"Activează ieșire automată", autoout_time:"Ora (ex: 18:00)", save:"Salvează", autoout_hint:"Dacă un lucrător nu apasă ieșire, sesiunea se închide automat la ora setată.", reports:"Rapoarte", period:"Perioadă", thisWeek:"Săptămâna aceasta", lastWeek:"Săptămâna trecută", thisMonth:"Luna aceasta", lastMonth:"Luna trecută", thisYear:"Anul acesta", custom:"Personalizat", from:"De la", to:"Până la", generate:"Generează", export_csv:"Export CSV", print:"Print", footnote:"Creat pentru uz local. Pentru server multi-utilizator (rețea & logare), se poate extinde ulterior (API/DB)."
     },
     it: {
-      app_title:"Registro Dipendenti — Time & Attendance (Firebase)", subtitle:"I dati sono salvati su Firebase Realtime Database. Backup locale opzionale (export/import).", lang:"Lingua", tab_dashboard:"Pannello", tab_admin:"Admin", tab_reports:"Report", quick_time:"Timbratura rapida", worker:"Dipendente", btn_checkin:"Registra entrata/uscita", btn_checkin_all:"Entrata per tutti", status:"Stato", tip_timer:"Suggerimento: puoi lasciare l'app aperta; il timer si aggiorna in tempo reale.", today_title:"Timbrature di oggi (selezionato)", date:"Data", start:"Inizio", end:"Fine", duration:"Durata", admin_title:"Gestisci dipendenti", unlock:"Apri Admin", name:"Nome", role:"Ruolo (opz.)", rate:"Tariffa/ora (opz.)", rate_short:"Tariffa", add:"Aggiungi", state:"Stato", actions:"Azioni", export_backup:"Esporta Backup (.json)", import_backup:"Importa Backup", reset_all:"Reset totale", manual_entries:"Inserimenti rapidi (manuale)", add_session:"Aggiungi sessione", manual_hint:"Per giorni passati o correzioni (non si sovrappone a una sessione attiva).", autoout_title:"Uscita automatica", autoout_enable:"Abilita uscita automatica", autoout_time:"Ora (es: 18:00)", save:"Salva", autoout_hint:"Se un dipendente non registra l'uscita, la sessione si chiude all'ora impostata.", reports:"Report", period:"Periodo", thisWeek:"Questa settimana", lastWeek:"Settimana scorsa", thisMonth:"Questo mese", lastMonth:"Mese scorso", thisYear:"Quest'anno", custom:"Personalizzato", from:"Da", to:"A", generate:"Genera", export_csv:"Esporta CSV", print:"Stampa", footnote:"Creato per uso locale. Per multi‑utente (rete & login) si può estendere (API/DB)."
+      app_title:"Registro Dipendenti — Time & Attendance (Firebase)", subtitle:"I dati sono salvati su Firebase Realtime Database. Backup locale opzionale (export/import).", lang:"Lingua", tab_dashboard:"Pannello", tab_admin:"Admin", tab_reports:"Report", quick_time:"Timbratura rapida", worker:"Dipendente", btn_checkin:"Registra entrata/uscita", btn_checkin_all:"Entrata per tutti", status:"Stato", tip_timer:"Suggerimento: puoi lasciare l'app aperta; il timer si aggiorna in tempo reale.", today_title:"Timbrature di oggi (selezionato)", date:"Data", start:"Inizio", end:"Fine", duration:"Durata", admin_title:"Gestisci dipendenti", unlock:"Apri Admin", name:"Nome", role:"Ruolo (opz.)", rate:"Tariffa/ora (opz.)", rate_short:"Tariffa", add:"Aggiungi", state:"Stato", actions:"Azioni", export_backup:"Esporta Backup (.json)", import_backup:"Importa Backup", reset_all:"Reset totale", manual_entries:"Inserimenti rapidi (manuale)", add_session:"Aggiungi sessione", manual_hint:"Per giorni passati o correzioni (non si sovrappone a una sessione attiva).", autoout_title:"Uscita automatica", autoout_enable:"Abilita uscita automatica", autoout_time:"Ora (es: 18:00)", save:"Salva", autoout_hint:"Se un dipendente non registra l'uscita, la sessione si chiude all'ora impostata.", reports:"Report", period:"Periodo", thisWeek:"Questa settimana", lastWeek:"Settimana scorsa", thisMonth:"Questo mese", lastMonth:"Mese scorso", thisYear:"Quest'anno", custom:"Personalizzato", from:"Da", to:"A", generate:"Genera", export_csv:"Esporta CSV", print:"Stampa", footnote:"Creato per uso locale. Per multi-utente (rete & login) si può estendere (API/DB)."
     }
   };
   function applyI18n(){
     const lang = localStorage.getItem('lang')||'ro';
     document.documentElement.lang = lang;
-    document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if(STR[lang][k]) el.textContent = STR[lang][k]; });
-    document.getElementById('btn-clock').textContent = STR[lang].btn_checkin;
-    document.querySelectorAll('#rep-range option').forEach(opt=>{ const k=opt.getAttribute('data-i18n'); if(k && STR[lang][k]) opt.textContent = STR[lang][k]; });
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const k=el.getAttribute('data-i18n');
+      if(STR[lang][k]) el.textContent = STR[lang][k];
+    });
+    document.querySelectorAll('#rep-range option').forEach(opt=>{
+      const k=opt.getAttribute('data-i18n'); if(k && STR[lang][k]) opt.textContent = STR[lang][k];
+    });
   }
-  document.getElementById('langSel').addEventListener('change', (e)=>{ localStorage.setItem('lang', e.target.value); applyI18n(); refreshDashboard(); renderEmployees(); renderEmployeePicker(); });
+  document.getElementById('langSel').addEventListener('change', (e)=>{
+    localStorage.setItem('lang', e.target.value);
+    applyI18n(); refreshDashboard(); renderEmployees(); renderEmployeePicker();
+  });
 
   // ===== App State =====
-  const APP_VERSION = 'v1.2.2-firebase';
+  const APP_VERSION = 'v1.3.0-firebase';
   const ADMIN_PASS = '1309';
   let isAdmin = sessionStorage.getItem('isAdmin')==='1';
   const now = () => new Date();
@@ -331,7 +335,22 @@
   const gid = () => Math.random().toString(36).slice(2,10);
   let dbCache = { employees: [], entries: [], lastEmployeeId: null, autoOut: { enabled:false, time:"18:00" } };
   let EMP_NODE = 'employees'; // auto-switch to 'workers' if present
+
   const objToArr = (o)=> Object.values(o||{});
+  function normalizeEmployees(val){
+    const src = val || {};
+    const out = [];
+    for(const [key, raw] of Object.entries(src)){
+      if(!raw || typeof raw !== 'object') continue;
+      const id = raw.id || key;
+      const name = raw.name
+        || [raw.firstName, raw.lastName].filter(Boolean).join(' ').trim()
+        || raw.fullName || raw.displayName || `Fără nume (${String(id).slice(-4)})`;
+      const imageUrl = raw.imageUrl || raw.photoURL || raw.photo || raw.avatar || '';
+      out.push({ id, name, imageUrl, ...raw });
+    }
+    return out;
+  }
 
   // ===== CRUD Employees =====
   async function upsertEmployee(emp){ await set(ref(rtdb, `${EMP_NODE}/${emp.id}`), emp); }
@@ -356,7 +375,11 @@
   // ===== Local query helpers =====
   function activeEntryFor(empId){ return dbCache.entries.find(e=>e.employeeId===empId && e.end==null); }
   function entriesFor(empId){ return dbCache.entries.filter(e=>e.employeeId===empId); }
-  function todayEntriesFor(empId){ const t=new Date(); t.setHours(0,0,0,0); const u=new Date(t); u.setDate(u.getDate()+1); return dbCache.entries.filter(e=>e.employeeId===empId && new Date(e.start)>=t && new Date(e.start)<u); }
+  function todayEntriesFor(empId){
+    const t=new Date(); t.setHours(0,0,0,0);
+    const u=new Date(t); u.setDate(u.getDate()+1);
+    return dbCache.entries.filter(e=>e.employeeId===empId && new Date(e.start)>=t && new Date(e.start)<u);
+  }
 
   // ===== Employee Picker (circle + photo) =====
   function renderEmployeePicker(){
@@ -368,7 +391,7 @@
       const on = !!activeEntryFor(e.id);
       return `<div class="emp ${sel}" onclick="selectEmployee('${e.id}')" title="${e.name}">
         <div class="status-dot ${on?'on':''}"></div>
-        <img src="${photo}" alt="${e.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'56\' height=\'56\'><rect width=\'100%\' height=\'100%\' fill=\'%23e5e7eb\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'10\' fill=\'%236b7280\'>No Photo</text></svg>'" />
+        <img src="${photo}" alt="${e.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'56\\' height=\\'56\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23e5e7eb\\'/><text x=\\'50%\\' y=\\'54%\\' text-anchor=\\'middle\\' font-size=\\'10\\' fill=\\'%236b7280\\'>No Photo</text></svg>'" />
         <div class="emp-name">${e.name}</div>
       </div>`
     }).join('');
@@ -430,12 +453,12 @@
     const emp = dbCache.employees.find(e=>e.id===empId);
     const active = activeEntryFor(empId);
     const btn = document.getElementById('btn-clock');
-    if(active){ document.getElementById('kpi-state').textContent = `${emp.name} este ÎN PROGRAM`; btn.classList.remove('success'); btn.classList.add('danger'); btn.textContent = (localStorage.getItem('lang')||'ro')==='it' ? 'Registra uscita' : 'Înregistrează ieșirea'; }
-    else { document.getElementById('kpi-state').textContent = `${emp.name} este ÎN AFARA PROGRAMULUI`; btn.classList.add('success'); btn.classList.remove('danger'); btn.textContent = (localStorage.getItem('lang')||'ro')==='it' ? 'Registra entrata' : 'Înregistrează intrarea'; }
+    const lang = localStorage.getItem('lang')||'ro';
+    if(active){ document.getElementById('kpi-state').textContent = `${emp.name} este ÎN PROGRAM`; btn.classList.remove('success'); btn.classList.add('danger'); btn.textContent = lang==='it' ? 'Registra uscita' : 'Înregistrează ieșirea'; }
+    else { document.getElementById('kpi-state').textContent = `${emp.name} este ÎN AFARA PROGRAMULUI`; btn.classList.add('success'); btn.classList.remove('danger'); btn.textContent = lang==='it' ? 'Registra entrata' : 'Înregistrează intrarea'; }
 
     const empEntries = entriesFor(empId).filter(e=>e.end!=null).sort((a,b)=>new Date(b.end)-new Date(a.end));
     const last = empEntries[0];
-    const lang = localStorage.getItem('lang')||'ro';
     const lastLabel = lang==='it' ? 'Ultima:' : 'Ultima:';
     const liveLabel = lang==='it' ? 'Durata attuale:' : 'Durată curentă:';
     document.getElementById('kpi-last').textContent = last ? `${lastLabel} ${fmtDate(new Date(last.start))}, ${fmtTime(new Date(last.start))} – ${fmtTime(new Date(last.end))} (${fmtDuration(durationOf(last))})` : (lang==='it'?'Ultima sessione: —':'Ultima sesiune: —');
@@ -552,11 +575,11 @@
     const range = getRange(); if(!range) return; const {from,to} = range;
     const filtered = dbCache.entries.filter(e=>{ const s = new Date(e.start); const en = e.end? new Date(e.end): now(); return en>=from && s<=to && (empSel==='all' || e.employeeId===empSel); }).sort((a,b)=> new Date(a.start)-new Date(b.start));
     const rows = filtered.map(e=>{ const emp = dbCache.employees.find(x=>x.id===e.employeeId); const d = new Date(e.start); return `<tr><td>${emp?emp.name:'—'}</td><td>${fmtDate(d)}</td><td>${fmtTime(new Date(e.start))}</td><td>${e.end? fmtTime(new Date(e.end)):'—'}</td><td>${fmtDuration(durationOf(e))}</td></tr>`; }).join('');
-    document.getElementById('rep-rows').innerHTML = rows || `<tr><td colspan=\"5\" class=\"muted\">Fără date.</td></tr>`;
+    document.getElementById('rep-rows').innerHTML = rows || `<tr><td colspan="5" class="muted">Fără date.</td></tr>`;
     const map = new Map(); filtered.forEach(e=>{ const ms = durationOf(e); map.set(e.employeeId, (map.get(e.employeeId)||0)+ms); });
     const items = []; let grand = 0, grandCost = 0;
-    map.forEach((ms, empId)=>{ grand += ms; const emp = dbCache.employees.find(x=>x.id===empId); const hours = (ms/3600000); const cost = emp?.rate!=null? hours*emp.rate: null; if(cost!=null) grandCost += cost; items.push(`<span class=\"pill\">${emp?emp.name:'—'} · ${hours.toFixed(2)}h${cost!=null?` · ${cost.toFixed(2)} EUR`:''}</span>`); });
-    const sumHtml = `<div class=\"kpi\"><h3 style=\"margin:0\">Total: ${(grand/3600000).toFixed(2)} ore</h3></div>${grandCost>0? `<span class=\\\"pill\\\">Cost estimat: ${grandCost.toFixed(2)} EUR</span>`:''}`;
+    map.forEach((ms, empId)=>{ grand += ms; const emp = dbCache.employees.find(x=>x.id===empId); const hours = (ms/3600000); const cost = emp?.rate!=null? hours*emp.rate: null; if(cost!=null) grandCost += cost; items.push(`<span class="pill">${emp?emp.name:'—'} · ${hours.toFixed(2)}h${cost!=null?` · ${cost.toFixed(2)} EUR`:''}</span>`); });
+    const sumHtml = `<div class="kpi"><h3 style="margin:0">Total: ${(grand/3600000).toFixed(2)} ore</h3></div>${grandCost>0? `<span class="pill">Cost estimat: ${grandCost.toFixed(2)} EUR</span>`:''}`;
     document.getElementById('rep-summary').innerHTML = sumHtml;
   }
   window.runReport = runReport;
@@ -624,7 +647,7 @@
     } catch (e) {}
 
     onValue(ref(rtdb, EMP_NODE), (snap)=>{
-      dbCache.employees = objToArr(snap.val());
+      dbCache.employees = normalizeEmployees(snap.val());
       renderEmployees(); populateEmployeeSelects(); renderEmployeePicker(); refreshDashboard();
     });
     onValue(ref(rtdb, 'entries'), (snap)=>{
