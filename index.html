@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>TimeTrack</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+  th { background: #f0f0f0; }
+  #report { margin-top: 20px; }
+</style>
+</head>
+<body>
+<h1>Evidența Lucrătorilor</h1>
+<section id="admin">
+  <h2>Panou Admin</h2>
+  <input id="newWorker" placeholder="Nume lucrător" />
+  <button onclick="addWorker()">Adaugă</button>
+</section>
+<section id="workers">
+  <h2>Lucrători</h2>
+  <table>
+    <thead>
+      <tr><th>Nume</th><th>Acțiuni</th></tr>
+    </thead>
+    <tbody id="workerRows"></tbody>
+  </table>
+</section>
+<section id="report">
+  <h2>Raport</h2>
+  <label>Lucrător:
+    <select id="reportWorker"><option value="all">Toți</option></select>
+  </label>
+  <label>Perioadă:
+    <select id="reportPeriod">
+      <option value="week">Săptămână</option>
+      <option value="month">Lună</option>
+      <option value="year">An</option>
+    </select>
+  </label>
+  <button onclick="generateReport()">Generează</button>
+  <pre id="reportOutput"></pre>
+</section>
+<script>
+const workers = JSON.parse(localStorage.getItem('workers') || '[]');
+
+function saveWorkers() {
+  localStorage.setItem('workers', JSON.stringify(workers));
+  populateReportSelect();
+}
+
+function addWorker() {
+  const name = document.getElementById('newWorker').value.trim();
+  if (!name) return;
+  workers.push({ id: Date.now(), name, sessions: [], checkedIn: null });
+  document.getElementById('newWorker').value = '';
+  saveWorkers();
+  renderWorkers();
+}
+
+function editWorker(id) {
+  const w = workers.find(w => w.id === id);
+  const newName = prompt('Nume nou', w.name);
+  if (newName) { w.name = newName; saveWorkers(); renderWorkers(); }
+}
+
+function deleteWorker(id) {
+  const idx = workers.findIndex(w => w.id === id);
+  if (idx > -1) { workers.splice(idx,1); saveWorkers(); renderWorkers(); }
+}
+
+function checkIn(id) {
+  const w = workers.find(w => w.id === id);
+  if (!w.checkedIn) {
+    w.checkedIn = new Date().toISOString();
+    saveWorkers();
+    renderWorkers();
+  }
+}
+
+function checkOut(id) {
+  const w = workers.find(w => w.id === id);
+  if (w.checkedIn) {
+    w.sessions.push({ in: w.checkedIn, out: new Date().toISOString() });
+    w.checkedIn = null;
+    saveWorkers();
+    renderWorkers();
+  }
+}
+
+function renderWorkers() {
+  const tbody = document.getElementById('workerRows');
+  tbody.innerHTML = '';
+  workers.forEach(w => {
+    const tr = document.createElement('tr');
+    const nameTd = document.createElement('td');
+    nameTd.textContent = w.name + (w.checkedIn ? ' (la lucru)' : '');
+    const actionsTd = document.createElement('td');
+    if (w.checkedIn) {
+      const outBtn = document.createElement('button');
+      outBtn.textContent = 'Ieșire';
+      outBtn.onclick = () => checkOut(w.id);
+      actionsTd.appendChild(outBtn);
+    } else {
+      const inBtn = document.createElement('button');
+      inBtn.textContent = 'Intrare';
+      inBtn.onclick = () => checkIn(w.id);
+      actionsTd.appendChild(inBtn);
+    }
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Editează';
+    editBtn.onclick = () => editWorker(w.id);
+    const delBtn = document.createElement('button');
+    delBtn.textContent = 'Șterge';
+    delBtn.onclick = () => deleteWorker(w.id);
+    actionsTd.appendChild(editBtn);
+    actionsTd.appendChild(delBtn);
+    tr.appendChild(nameTd);
+    tr.appendChild(actionsTd);
+    tbody.appendChild(tr);
+  });
+  populateReportSelect();
+}
+
+function populateReportSelect() {
+  const select = document.getElementById('reportWorker');
+  select.innerHTML = '<option value="all">Toți</option>';
+  workers.forEach(w => {
+    const opt = document.createElement('option');
+    opt.value = w.id;
+    opt.textContent = w.name;
+    select.appendChild(opt);
+  });
+}
+
+function generateReport() {
+  const workerId = document.getElementById('reportWorker').value;
+  const period = document.getElementById('reportPeriod').value;
+  let reportText = '';
+  const selectedWorkers = workerId === 'all' ? workers : workers.filter(w => w.id == workerId);
+  selectedWorkers.forEach(w => {
+    const total = totalHours(w.sessions, period);
+    reportText += `${w.name}: ${total.toFixed(2)} ore\n`;
+  });
+  document.getElementById('reportOutput').textContent = reportText;
+}
+
+function totalHours(sessions, period) {
+  const now = new Date();
+  const start = periodStart(period, now);
+  return sessions
+    .map(s => ({ in: new Date(s.in), out: new Date(s.out) }))
+    .filter(s => s.out >= start)
+    .reduce((sum, s) => sum + (s.out - s.in) / 36e5, 0);
+}
+
+function periodStart(period, date) {
+  const d = new Date(date);
+  if (period === 'week') {
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff)).setHours(0,0,0,0);
+  }
+  if (period === 'month') return new Date(d.getFullYear(), d.getMonth(), 1);
+  if (period === 'year') return new Date(d.getFullYear(), 0, 1);
+  return d;
+}
+
+renderWorkers();
+</script>
+</body>
+</html>
