@@ -3,75 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Evidență Lucrători – Time & Attendance (Firebase)</title>
+  <title>Time & Attendance — Firebase</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      /* Light + Liquid Glass */
-      --bg:#f6f7f9;
-      --text:#0f172a;
-      --muted:#64748b;
-      --card:rgba(255,255,255,.7);
-      --card-border:rgba(15,23,42,.06);
+      --bg:#f6f7f9; --text:#0f172a; --muted:#64748b;
+      --card:rgba(255,255,255,.7); --card-border:rgba(15,23,42,.06);
       --ring:0 0 0 3px rgba(59,130,246,.25);
-      --accent:#2563eb;
-      --success:#16a34a;
-      --danger:#dc2626;
-      --warning:#f59e0b;
+      --accent:#2563eb; --success:#16a34a; --danger:#dc2626;
       --radius:18px;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial; background:var(--bg); color:var(--text)}
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial;background:var(--bg);color:var(--text)}
     .container{max-width:1100px;margin:28px auto;padding:0 16px}
     header{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:16px}
     .title{font-size:20px;font-weight:700;letter-spacing:.2px}
     .badge{font-size:12px;padding:4px 8px;border-radius:999px;background:#eef2ff;color:#4338ca;border:1px solid #c7d2fe}
-    .card{background:var(--card);backdrop-filter: blur(12px) saturate(140%);-webkit-backdrop-filter: blur(12px) saturate(140%);border:1px solid var(--card-border);
-      border-radius:var(--radius);padding:16px;box-shadow:0 10px 30px rgba(15,23,42,.06)}
+    .card{background:var(--card);backdrop-filter: blur(12px) saturate(140%);-webkit-backdrop-filter: blur(12px) saturate(140%);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px;box-shadow:0 10px 30px rgba(15,23,42,.06)}
     .tabs{display:flex;gap:8px;flex-wrap:wrap}
-    .tab{appearance:none;border:1px solid var(--card-border);background:rgba(255,255,255,.65);color:var(--text);
-      padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:600}
+    .tab{appearance:none;border:1px solid var(--card-border);background:rgba(255,255,255,.65);color:var(--text);padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:600}
     .tab.active{background:white;border-color:#bfdbfe;box-shadow:var(--ring)}
     .grid{display:grid;gap:16px}
     @media(min-width:900px){.grid-2{grid-template-columns:1fr 1fr}}
     label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
-    input,select,button,textarea{font-family:inherit}
-    .input{width:100%;background:white;border:1px solid var(--card-border);color:var(--text);
-      padding:10px 12px;border-radius:12px;outline:none}
+    .input{width:100%;background:white;border:1px solid var(--card-border);color:var(--text);padding:10px 12px;border-radius:12px;outline:none}
     .input:focus{border-color:#bfdbfe;box-shadow:var(--ring)}
     .btn{appearance:none;border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer}
     .btn.primary{background:linear-gradient(180deg,#3b82f6,#2563eb);color:white}
     .btn.success{background:linear-gradient(180deg,#22c55e,#16a34a);color:white}
-    .btn.warn{background:linear-gradient(180deg,#f59e0b,#d97706);color:white}
     .btn.ghost{background:rgba(255,255,255,.65);color:var(--text);border:1px solid var(--card-border)}
     .btn.danger{background:linear-gradient(180deg,#ef4444,#dc2626);color:white}
     .row{display:flex;gap:8px;align-items:end;flex-wrap:wrap}
-    .spacer{flex:1}
-    .muted{color:var(--muted)}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:10px 8px;border-bottom:1px solid var(--card-border);text-align:left}
+    .spacer{flex:1} .muted{color:var(--muted)}
+    table{width:100%;border-collapse:collapse} th,td{padding:10px 8px;border-bottom:1px solid var(--card-border);text-align:left}
     th{font-size:12px;color:#2563eb;text-transform:uppercase;letter-spacing:.08em}
-    .kpi{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    .kpi h3{margin:0;font-size:22px}
+    .kpi{display:flex;gap:12px;align-items:center;flex-wrap:wrap} .kpi h3{margin:0;font-size:22px}
     .pill{padding:6px 10px;border-radius:999px;background:rgba(37,99,235,.08);border:1px solid #bfdbfe;font-size:12px;color:#1e3a8a}
     .hr{height:1px;background:linear-gradient(90deg,transparent,var(--card-border),transparent);margin:14px 0}
-    .footer{margin-top:18px;font-size:12px;color:var(--muted)}
-    .link{color:#2563eb;text-decoration:none}
-    .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(59,130,246,.12);border:1px solid #bfdbfe;color:#1d4ed8;font-size:12px}
     .hidden{display:none !important}
-    /* Employee picker (circle + photo) */
+    /* Employee picker */
     .emp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:10px}
     .emp{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;border-radius:14px;background:rgba(255,255,255,.6);border:1px solid var(--card-border);cursor:pointer;transition:.15s}
     .emp:hover{box-shadow:0 0 0 3px rgba(59,130,246,.15)}
     .emp.selected{box-shadow:0 0 0 3px rgba(34,197,94,.25);border-color:#86efac}
     .emp img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid #e2e8f0;background:#fff}
     .emp-name{font-size:12px;text-align:center;line-height:1.1}
-    .status-dot{width:10px;height:10px;border-radius:50%;background:#e2e8f0;border:1px solid #cbd5e1}
-    .status-dot.on{background:#22c55e;border-color:#16a34a}
-    .header-row{display:flex;align-items:center;gap:10px}
+    .dot{width:10px;height:10px;border-radius:50%;background:#e2e8f0;border:1px solid #cbd5e1}
+    .dot.on{background:#16a34a;border-color:#16a34a}
     .lang{display:flex;gap:8px;align-items:center}
     .lang select{background:white;border:1px solid var(--card-border);border-radius:10px;padding:6px 10px}
   </style>
@@ -82,23 +62,18 @@
       <div style="display:flex;align-items:center;gap:12px">
         <div style="width:38px;height:38px;border-radius:10px;background:radial-gradient(60% 60% at 30% 20%, #93c5fd, transparent),radial-gradient(60% 60% at 80% 70%, #22c55e, transparent);border:1px solid rgba(15,23,42,.15);"></div>
         <div>
-          <div class="title" data-i18n="app_title">Evidență Lucrători — Time & Attendance (Firebase)</div>
-          <div class="muted" style="font-size:12px" data-i18n="subtitle">Datele sunt salvate în Firebase Realtime Database. Export/Import opțional pentru backup local.</div>
+          <div class="title" data-i18n="app_title">Evidență Lucrători — Firebase</div>
+          <div class="muted" style="font-size:12px" data-i18n="subtitle">Date salvate în Firebase Realtime Database.</div>
         </div>
       </div>
-      <div class="header-row">
-        <div class="lang">
-          <label for="langSel" class="muted" style="font-size:12px" data-i18n="lang">Limbă</label>
-          <select id="langSel">
-            <option value="ro">Română</option>
-            <option value="it">Italiană</option>
-          </select>
-        </div>
+      <div class="lang">
+        <label class="muted" for="langSel" style="font-size:12px" data-i18n="lang">Limbă</label>
+        <select id="langSel"><option value="ro">Română</option><option value="it">Italiană</option></select>
         <span class="badge" id="version"></span>
       </div>
     </header>
 
-    <div class="tabs" role="tablist">
+    <div class="tabs">
       <button class="tab active" id="tab-dashboard" onclick="switchTab('dashboard')" data-i18n="tab_dashboard">Panou lucru</button>
       <button class="tab" id="tab-admin" onclick="switchTab('admin')" data-i18n="tab_admin">Admin</button>
       <button class="tab" id="tab-reports" onclick="switchTab('reports')" data-i18n="tab_reports">Rapoarte</button>
@@ -116,7 +91,7 @@
             </div>
             <div style="display:flex;flex-direction:column;gap:8px;min-width:220px">
               <button class="btn success" id="btn-clock" onclick="toggleClock()" data-i18n="btn_checkin">Înregistrează intrarea</button>
-              <button class="btn ghost" onclick="addNowEntryForAll()" title="Intrare pentru toți activii" data-i18n="btn_checkin_all">Intrare toți</button>
+              <button class="btn ghost" onclick="addNowEntryForAll()" data-i18n="btn_checkin_all">Intrare toți</button>
             </div>
             <div class="spacer"></div>
           </div>
@@ -130,15 +105,12 @@
             <span class="pill" id="kpi-live">Durată curentă: 00:00</span>
             <span class="pill" id="kpi-last">Ultima sesiune: —</span>
           </div>
-          <div class="footer" data-i18n="tip_timer">Sfat: poți lăsa aplicația deschisă; timerul se actualizează în timp real.</div>
         </div>
 
         <div>
           <h2 style="margin:0 0 8px 0" data-i18n="today_title">Pontajul de azi (selectat)</h2>
           <table>
-            <thead>
-              <tr><th data-i18n="date">Data</th><th data-i18n="start">Start</th><th data-i18n="end">Stop</th><th data-i18n="duration">Durată</th><th></th></tr>
-            </thead>
+            <thead><tr><th data-i18n="date">Data</th><th data-i18n="start">Start</th><th data-i18n="end">Stop</th><th data-i18n="duration">Durată</th><th></th></tr></thead>
             <tbody id="today-rows"></tbody>
           </table>
         </div>
@@ -148,7 +120,6 @@
     <!-- ADMIN -->
     <section id="view-admin" class="card hidden" role="tabpanel" aria-labelledby="tab-admin">
       <h2 style="margin-top:0" data-i18n="admin_title">Administrează lucrători</h2>
-      <!-- Admin lock -->
       <div id="admin-lock" class="row" style="align-items:center">
         <input id="admin-pass" class="input" type="password" placeholder="Parolă Admin" />
         <button class="btn primary" onclick="unlockAdmin()" data-i18n="unlock">Deschide Admin</button>
@@ -174,9 +145,7 @@
 
             <div class="hr"></div>
             <table>
-              <thead>
-                <tr><th data-i18n="name">Nume</th><th data-i18n="role">Funcția</th><th data-i18n="rate_short">Tarif</th><th data-i18n="state">Stare</th><th style="width:240px" data-i18n="actions">Acțiuni</th></tr>
-              </thead>
+              <thead><tr><th data-i18n="name">Nume</th><th data-i18n="role">Funcția</th><th data-i18n="rate_short">Tarif</th><th data-i18n="state">Stare</th><th style="width:240px" data-i18n="actions">Acțiuni</th></tr></thead>
               <tbody id="emp-rows"></tbody>
             </table>
 
@@ -184,9 +153,9 @@
               <button class="btn ghost" onclick="exportData()" data-i18n="export_backup">Exportă Backup (.json)</button>
               <label class="btn ghost" for="import-file" style="cursor:pointer" data-i18n="import_backup">Importă Backup</label>
               <input id="import-file" type="file" accept="application/json" class="hidden" />
-              <button class="btn warn" onclick="resetAll()" data-i18n="reset_all">Resetare totală</button>
+              <button class="btn danger" onclick="resetAll()" data-i18n="reset_all">Resetare totală</button>
               <div class="spacer"></div>
-              <span class="chip" data-i18n-dyn="total_employees">Total lucrători: <b id="emp-count" style="margin-left:6px">0</b></span>
+              <span class="pill" id="emp-count">0</span>
             </div>
           </div>
 
@@ -197,7 +166,7 @@
                 <label data-i18n="worker">Lucrător</label>
                 <select id="manual-employee" class="input"></select>
               </div>
-              <div style="width:170px">
+              <div style="width:160px">
                 <label data-i18n="date">Data</label>
                 <input id="manual-date" type="date" class="input" />
               </div>
@@ -211,13 +180,12 @@
               </div>
               <button class="btn primary" onclick="addManualEntry()" data-i18n="add_session">Adaugă sesiune</button>
             </div>
-            <div class="footer" data-i18n="manual_hint">Pentru zile trecute sau corecții (nu se suprapun peste o sesiune activă).</div>
 
             <div class="hr"></div>
             <h3 style="margin:0 0 8px 0" data-i18n="autoout_title">Ieșire automată</h3>
             <div class="row">
               <label style="display:flex;align-items:center;gap:8px">
-                <input type="checkbox" id="autoout-enabled" /> <span data-i18n="autoout_enable">Activează ieșire automată</span>
+                <input type="checkbox" id="autoout-enabled" /> <span data-i18n="autoout_enable">Activează</span>
               </label>
               <div style="width:140px">
                 <label data-i18n="autoout_time">Ora (ex: 18:00)</label>
@@ -225,7 +193,7 @@
               </div>
               <button class="btn primary" onclick="saveAutoOut()" data-i18n="save">Salvează</button>
             </div>
-            <div class="footer" data-i18n="autoout_hint">Dacă un lucrător nu apasă ieșire, sesiunea se închide automat la ora setată.</div>
+            <div class="muted" style="margin-top:8px" data-i18n="autoout_hint">Sesiunile neînchise se închid automat la ora setată (retroactiv).</div>
           </div>
         </div>
       </div>
@@ -251,14 +219,8 @@
           </select>
         </div>
         <div id="rep-custom" class="row hidden" style="min-width:360px">
-          <div style="width:170px">
-            <label data-i18n="from">De la</label>
-            <input id="rep-from" type="date" class="input" />
-          </div>
-          <div style="width:170px">
-            <label data-i18n="to">Până la</label>
-            <input id="rep-to" type="date" class="input" />
-          </div>
+          <div style="width:170px"><label data-i18n="from">De la</label><input id="rep-from" type="date" class="input" /></div>
+          <div style="width:170px"><label data-i18n="to">Până la</label><input id="rep-to" type="date" class="input" /></div>
         </div>
         <button class="btn primary" onclick="runReport()" data-i18n="generate">Generează</button>
         <button class="btn ghost" onclick="exportCSV()" data-i18n="export_csv">Export CSV</button>
@@ -268,23 +230,18 @@
 
       <div class="hr"></div>
       <div id="rep-summary" class="kpi"></div>
-
       <div class="hr"></div>
       <table>
-        <thead>
-          <tr><th data-i18n="worker">Lucrător</th><th data-i18n="date">Data</th><th data-i18n="start">Start</th><th data-i18n="end">Stop</th><th data-i18n="duration">Durată</th></tr>
-        </thead>
+        <thead><tr><th data-i18n="worker">Lucrător</th><th data-i18n="date">Data</th><th data-i18n="start">Start</th><th data-i18n="end">Stop</th><th data-i18n="duration">Durată</th></tr></thead>
         <tbody id="rep-rows"></tbody>
       </table>
     </section>
-
-    <div class="footer" data-i18n="footnote">Creat pentru uz local. Pentru server multi-utilizator (rețea & logare), se poate extinde ulterior (API/DB).</div>
   </div>
 
   <script type="module">
-  // ===== Firebase Setup =====
+  /***** Firebase *****/
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getDatabase, ref, onValue, set, update, remove, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  import { getDatabase, ref, onValue, set, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
   import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const firebaseConfig = {
@@ -300,381 +257,359 @@
   const rtdb = getDatabase(app);
   const auth = getAuth(app);
 
-  // ===== I18N (RO/IT) =====
+  /***** I18N *****/
   const STR = {
-    ro: {
-      app_title:"Evidență Lucrători — Time & Attendance (Firebase)", subtitle:"Datele sunt salvate în Firebase Realtime Database. Export/Import opțional pentru backup local.", lang:"Limbă", tab_dashboard:"Panou lucru", tab_admin:"Admin", tab_reports:"Rapoarte", quick_time:"Pontaj rapid", worker:"Lucrător", btn_checkin:"Înregistrează intrarea", btn_checkin_all:"Intrare toți", status:"Stare", tip_timer:"Sfat: poți lăsa aplicația deschisă; timerul se actualizează în timp real.", today_title:"Pontajul de azi (selectat)", date:"Data", start:"Start", end:"Stop", duration:"Durată", admin_title:"Administrează lucrători", unlock:"Deschide Admin", name:"Nume", role:"Funcția (opțional)", rate:"Tarif/oră (opțional)", rate_short:"Tarif", add:"Adaugă", state:"Stare", actions:"Acțiuni", export_backup:"Exportă Backup (.json)", import_backup:"Importă Backup", reset_all:"Resetare totală", manual_entries:"Intrări rapide (manual)", add_session:"Adaugă sesiune", manual_hint:"Pentru zile trecute sau corecții (nu se suprapun peste o sesiune activă).", autoout_title:"Ieșire automată", autoout_enable:"Activează ieșire automată", autoout_time:"Ora (ex: 18:00)", save:"Salvează", autoout_hint:"Dacă un lucrător nu apasă ieșire, sesiunea se închide automat la ora setată.", reports:"Rapoarte", period:"Perioadă", thisWeek:"Săptămâna aceasta", lastWeek:"Săptămâna trecută", thisMonth:"Luna aceasta", lastMonth:"Luna trecută", thisYear:"Anul acesta", custom:"Personalizat", from:"De la", to:"Până la", generate:"Generează", export_csv:"Export CSV", print:"Print", footnote:"Creat pentru uz local. Pentru server multi-utilizator (rețea & logare), se poate extinde ulterior (API/DB)."
-    },
-    it: {
-      app_title:"Registro Dipendenti — Time & Attendance (Firebase)", subtitle:"I dati sono salvati su Firebase Realtime Database. Backup locale opzionale (export/import).", lang:"Lingua", tab_dashboard:"Pannello", tab_admin:"Admin", tab_reports:"Report", quick_time:"Timbratura rapida", worker:"Dipendente", btn_checkin:"Registra entrata/uscita", btn_checkin_all:"Entrata per tutti", status:"Stato", tip_timer:"Suggerimento: puoi lasciare l'app aperta; il timer si aggiorna in tempo reale.", today_title:"Timbrature di oggi (selezionato)", date:"Data", start:"Inizio", end:"Fine", duration:"Durata", admin_title:"Gestisci dipendenti", unlock:"Apri Admin", name:"Nome", role:"Ruolo (opz.)", rate:"Tariffa/ora (opz.)", rate_short:"Tariffa", add:"Aggiungi", state:"Stato", actions:"Azioni", export_backup:"Esporta Backup (.json)", import_backup:"Importa Backup", reset_all:"Reset totale", manual_entries:"Inserimenti rapidi (manuale)", add_session:"Aggiungi sessione", manual_hint:"Per giorni passati o correzioni (non si sovrappone a una sessione attiva).", autoout_title:"Uscita automatica", autoout_enable:"Abilita uscita automatica", autoout_time:"Ora (es: 18:00)", save:"Salva", autoout_hint:"Se un dipendente non registra l'uscita, la sessione si chiude all'ora impostata.", reports:"Report", period:"Periodo", thisWeek:"Questa settimana", lastWeek:"Settimana scorsa", thisMonth:"Questo mese", lastMonth:"Mese scorso", thisYear:"Quest'anno", custom:"Personalizzato", from:"Da", to:"A", generate:"Genera", export_csv:"Esporta CSV", print:"Stampa", footnote:"Creato per uso locale. Per multi-utente (rete & login) si può estendere (API/DB)."
-    }
+    ro:{app_title:"Evidență Lucrători — Firebase",subtitle:"Date salvate în Firebase Realtime Database.",lang:"Limbă",
+        tab_dashboard:"Panou lucru",tab_admin:"Admin",tab_reports:"Rapoarte",
+        quick_time:"Pontaj rapid",worker:"Lucrător",btn_checkin:"Înregistrează intrarea",btn_checkin_all:"Intrare toți",
+        status:"Stare",today_title:"Pontajul de azi (selectat)",date:"Data",start:"Start",end:"Stop",duration:"Durată",
+        admin_title:"Administrează lucrători",unlock:"Deschide Admin",name:"Nume",role:"Funcția (opțional)",
+        rate:"Tarif/oră (opțional)",rate_short:"Tarif",add:"Adaugă",state:"Stare",actions:"Acțiuni",
+        export_backup:"Exportă Backup (.json)",import_backup:"Importă Backup",reset_all:"Resetare totală",
+        manual_entries:"Intrări rapide (manual)",add_session:"Adaugă sesiune",
+        autoout_title:"Ieșire automată",autoout_enable:"Activează",autoout_time:"Ora (ex: 18:00)",
+        autoout_hint:"Sesiunile neînchise se închid automat la ora setată (retroactiv).",save:"Salvează",
+        reports:"Rapoarte",period:"Perioadă",thisWeek:"Săptămâna aceasta",lastWeek:"Săptămâna trecută",
+        thisMonth:"Luna aceasta",lastMonth:"Luna trecută",thisYear:"Anul acesta",custom:"Personalizat",
+        from:"De la",to:"Până la",generate:"Generează",export_csv:"Export CSV",print:"Print"},
+    it:{app_title:"Registro Dipendenti — Firebase",subtitle:"Dati salvati su Firebase Realtime Database.",lang:"Lingua",
+        tab_dashboard:"Pannello",tab_admin:"Admin",tab_reports:"Report",
+        quick_time:"Timbratura rapida",worker:"Dipendente",btn_checkin:"Registra entrata",btn_checkin_all:"Entrata per tutti",
+        status:"Stato",today_title:"Timbrature di oggi (selezionato)",date:"Data",start:"Inizio",end:"Fine",duration:"Durata",
+        admin_title:"Gestisci dipendenti",unlock:"Apri Admin",name:"Nome",role:"Ruolo (opz.)",
+        rate:"Tariffa/ora (opz.)",rate_short:"Tariffa",add:"Aggiungi",state:"Stato",actions:"Azioni",
+        export_backup:"Esporta Backup (.json)",import_backup:"Importa Backup",reset_all:"Reset totale",
+        manual_entries:"Inserimenti rapidi (manuale)",add_session:"Aggiungi sessione",
+        autoout_title:"Uscita automatica",autoout_enable:"Abilita",autoout_time:"Ora (es: 18:00)",
+        autoout_hint:"Le sessioni aperte si chiudono all'ora impostata (retroattivo).",save:"Salva",
+        reports:"Report",period:"Periodo",thisWeek:"Questa settimana",lastWeek:"Settimana scorsa",
+        thisMonth:"Questo mese",lastMonth:"Mese scorso",thisYear:"Quest'anno",custom:"Personalizzato",
+        from:"Da",to:"A",generate:"Genera",export_csv:"Esporta CSV",print:"Stampa"}
   };
   function applyI18n(){
     const lang = localStorage.getItem('lang')||'ro';
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-i18n]').forEach(el=>{
-      const k=el.getAttribute('data-i18n');
-      if(STR[lang][k]) el.textContent = STR[lang][k];
+      const k=el.getAttribute('data-i18n'); if(STR[lang][k]) el.textContent = STR[lang][k];
     });
     document.querySelectorAll('#rep-range option').forEach(opt=>{
       const k=opt.getAttribute('data-i18n'); if(k && STR[lang][k]) opt.textContent = STR[lang][k];
     });
+    document.getElementById('btn-clock').textContent = STR[lang].btn_checkin;
   }
-  document.getElementById('langSel').addEventListener('change', (e)=>{
+  document.getElementById('langSel').addEventListener('change', e=>{
     localStorage.setItem('lang', e.target.value);
     applyI18n(); refreshDashboard(); renderEmployees(); renderEmployeePicker();
   });
 
-  // ===== App State =====
-  const APP_VERSION = 'v1.3.0-firebase';
+  /***** App State *****/
+  const APP_VERSION = 'v2.0.0';
   const ADMIN_PASS = '1309';
   let isAdmin = sessionStorage.getItem('isAdmin')==='1';
-  const now = () => new Date();
-  const fmtDate = (d)=> new Intl.DateTimeFormat('ro-RO',{year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
-  const fmtTime = (d)=> new Intl.DateTimeFormat('ro-RO',{hour:'2-digit',minute:'2-digit',hour12:false}).format(d);
-  const gid = () => Math.random().toString(36).slice(2,10);
-  let dbCache = { employees: [], entries: [], lastEmployeeId: null, autoOut: { enabled:false, time:"18:00" } };
-  let EMP_NODE = 'employees'; // auto-switch to 'workers' if present
+  const now = ()=>new Date();
+  const fmtDate = d=>new Intl.DateTimeFormat('ro-RO',{year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+  const fmtTime = d=>new Intl.DateTimeFormat('ro-RO',{hour:'2-digit',minute:'2-digit',hour12:false}).format(d);
+  const gid = ()=>Math.random().toString(36).slice(2,10);
+  const objToArr = o=>Object.values(o||{});
+  let dbCache = {employees:[], entries:[], lastEmployeeId:null, autoOut:{enabled:false,time:'18:00'}};
 
-  const objToArr = (o)=> Object.values(o||{});
-  function normalizeEmployees(val){
-    const src = val || {};
-    const out = [];
+  function normalizeWorkers(val){
+    const res=[]; const src=val||{};
     for(const [key, raw] of Object.entries(src)){
-      if(!raw || typeof raw !== 'object') continue;
+      if(!raw || typeof raw!=='object') continue;
       const id = raw.id || key;
-      const name = raw.name
-        || [raw.firstName, raw.lastName].filter(Boolean).join(' ').trim()
-        || raw.fullName || raw.displayName || `Fără nume (${String(id).slice(-4)})`;
+      const name = raw.name || [raw.firstName,raw.lastName].filter(Boolean).join(' ').trim() || raw.fullName || raw.displayName || `Fără nume (${String(id).slice(-4)})`;
       const imageUrl = raw.imageUrl || raw.photoURL || raw.photo || raw.avatar || '';
-      out.push({ id, name, imageUrl, ...raw });
+      res.push({...raw,id,name,imageUrl});
     }
-    return out;
+    return res;
   }
 
-  // ===== CRUD Employees =====
-  async function upsertEmployee(emp){ await set(ref(rtdb, `${EMP_NODE}/${emp.id}`), emp); }
-  async function deleteEmployeeFB(id){ await remove(ref(rtdb, `${EMP_NODE}/${id}`)); }
-  async function toggleActiveFB(id, active){ await update(ref(rtdb, `${EMP_NODE}/${id}`), { active }); }
+  /***** Firebase CRUD *****/
+  // workers/
+  async function upsertWorker(w){ await set(ref(rtdb, `workers/${w.id}`), w); }
+  async function deleteWorker(id){ await remove(ref(rtdb, `workers/${id}`)); }
+  async function toggleActive(id, active){ await update(ref(rtdb, `workers/${id}`), { active }); }
 
-  // ===== CRUD Entries =====
-  async function addEntryFB(entry){ await set(ref(rtdb, `entries/${entry.id}`), entry); }
-  async function updateEntryFB(entry){ await set(ref(rtdb, `entries/${entry.id}`), entry); }
-  async function removeEntryFB(id){ await remove(ref(rtdb, `entries/${id}`)); }
+  // entries/
+  async function addEntry(e){ await set(ref(rtdb, `entries/${e.id}`), e); }
+  async function saveEntry(e){ await set(ref(rtdb, `entries/${e.id}`), e); }
+  async function removeEntry(id){ await remove(ref(rtdb, `entries/${id}`)); }
 
-  // ===== Meta =====
-  async function setLastEmployeeId(id){ await set(ref(rtdb, 'meta/lastEmployeeId'), id ?? null); }
+  // meta/
+  async function setLastEmployeeId(id){ await set(ref(rtdb,'meta/lastEmployeeId'), id ?? null); }
   async function saveAutoOut(){
     const enabled = document.getElementById('autoout-enabled').checked;
     const time = document.getElementById('autoout-time').value || '18:00';
-    await set(ref(rtdb, 'meta/autoOut'), { enabled, time });
+    await set(ref(rtdb,'meta/autoOut'), {enabled,time});
     alert('Salvat.');
   }
   window.saveAutoOut = saveAutoOut;
 
-  // ===== Local query helpers =====
-  function activeEntryFor(empId){ return dbCache.entries.find(e=>e.employeeId===empId && e.end==null); }
-  function entriesFor(empId){ return dbCache.entries.filter(e=>e.employeeId===empId); }
-  function todayEntriesFor(empId){
+  /***** Helpers *****/
+  const activeEntryFor = id => dbCache.entries.find(e=>e.employeeId===id && e.end==null);
+  const entriesFor = id => dbCache.entries.filter(e=>e.employeeId===id);
+  const todayEntriesFor = id => {
     const t=new Date(); t.setHours(0,0,0,0);
     const u=new Date(t); u.setDate(u.getDate()+1);
-    return dbCache.entries.filter(e=>e.employeeId===empId && new Date(e.start)>=t && new Date(e.start)<u);
-  }
+    return dbCache.entries.filter(e=>e.employeeId===id && new Date(e.start)>=t && new Date(e.start)<u);
+  };
+  const durationOf = e => {
+    const s=new Date(e.start).getTime();
+    const en=(e.end? new Date(e.end): now()).getTime();
+    return Math.max(0, en-s);
+  };
+  const fmtDuration = ms => {
+    const h=Math.floor(ms/3600000);
+    const m=Math.round((ms%3600000)/60000);
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  };
 
-  // ===== Employee Picker (circle + photo) =====
+  /***** UI: Employee picker *****/
   function renderEmployeePicker(){
-    const grid = document.getElementById('employee-grid'); if(!grid) return;
+    const grid=document.getElementById('employee-grid'); if(!grid) return;
     const selId = dbCache.lastEmployeeId || dbCache.employees[0]?.id || '';
     grid.innerHTML = dbCache.employees.map(e=>{
-      const photo = e.imageUrl || e.photoURL || e.photo || e.avatar || '';
-      const sel = e.id===selId ? 'selected' : '';
       const on = !!activeEntryFor(e.id);
-      return `<div class="emp ${sel}" onclick="selectEmployee('${e.id}')" title="${e.name}">
-        <div class="status-dot ${on?'on':''}"></div>
-        <img src="${photo}" alt="${e.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'56\\' height=\\'56\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23e5e7eb\\'/><text x=\\'50%\\' y=\\'54%\\' text-anchor=\\'middle\\' font-size=\\'10\\' fill=\\'%236b7280\\'>No Photo</text></svg>'" />
+      return `<div class="emp ${e.id===selId?'selected':''}" onclick="selectEmployee('${e.id}')" title="${e.name}">
+        <div class="dot ${on?'on':''}"></div>
+        <img src="${e.imageUrl||''}" alt="${e.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'56\\' height=\\'56\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23e5e7eb\\'/><text x=\\'50%\\' y=\\'54%\\' text-anchor=\\'middle\\' font-size=\\'10\\' fill=\\'%236b7280\\'>No Photo</text></svg>'"/>
         <div class="emp-name">${e.name}</div>
-      </div>`
+      </div>`;
     }).join('');
   }
   window.renderEmployeePicker = renderEmployeePicker;
-  function selectEmployee(id){ dbCache.lastEmployeeId = id; setLastEmployeeId(id); refreshDashboard(); renderEmployeePicker(); }
+  function selectEmployee(id){ dbCache.lastEmployeeId=id; setLastEmployeeId(id); refreshDashboard(); renderEmployeePicker(); }
   window.selectEmployee = selectEmployee;
 
-  // ===== Populate selects used in Admin/Reports =====
-  function populateEmployeeSelects(){
-    const options = dbCache.employees.map(e=>`<option value="${e.id}">${e.name}${e.active===false?' (inactiv)':''}</option>`).join('');
-    const manual = document.getElementById('manual-employee'); if(manual) manual.innerHTML = options;
-    const rep = document.getElementById('rep-employee'); if(rep) rep.innerHTML = `<option value="all">Toți</option>` + options;
-  }
-  window.populateEmployeeSelects = populateEmployeeSelects;
-
-  // ===== UI Helpers =====
+  /***** UI: Tabs & Admin *****/
   function switchTab(tab){
     if(tab==='admin' && !isAdmin){ document.getElementById('admin-lock').classList.remove('hidden'); document.getElementById('admin-content').classList.add('hidden'); }
     document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
     document.getElementById('tab-'+tab).classList.add('active');
     document.querySelectorAll('[id^=view-]').forEach(v=>v.classList.add('hidden'));
     document.getElementById('view-'+tab).classList.remove('hidden');
-    if(tab==='reports') runReport();
-    if(tab==='dashboard') { refreshDashboard(); renderEmployeePicker(); }
-    if(tab==='admin') { renderEmployees(); populateEmployeeSelects(); }
+    if(tab==='dashboard'){ refreshDashboard(); renderEmployeePicker(); }
+    if(tab==='admin'){ renderEmployees(); populateEmployeeSelects(); }
+    if(tab==='reports'){ runReport(); }
   }
   window.switchTab = switchTab;
 
   function unlockAdmin(){
     const pass = document.getElementById('admin-pass').value.trim();
     if(pass===ADMIN_PASS){ isAdmin=true; sessionStorage.setItem('isAdmin','1'); document.getElementById('admin-lock').classList.add('hidden'); document.getElementById('admin-content').classList.remove('hidden'); }
-    else { alert('Parolă greșită.'); }
+    else alert('Parolă greșită.');
   }
   window.unlockAdmin = unlockAdmin;
 
+  /***** Dashboard actions *****/
   async function toggleClock(){
     const empId = dbCache.lastEmployeeId || dbCache.employees[0]?.id;
     if(!empId){ alert('Selectează un lucrător.'); return; }
     const active = activeEntryFor(empId);
-    if(active){ active.end = now().toISOString(); await updateEntryFB(active); }
-    else { await addEntryFB({ id: gid(), employeeId: empId, start: now().toISOString(), end: null }); }
+    if(active){ active.end = now().toISOString(); await saveEntry(active); }
+    else{ await addEntry({id:gid(), employeeId:empId, start:now().toISOString(), end:null}); }
     await setLastEmployeeId(empId);
     refreshDashboard(); runReport(); renderEmployeePicker();
   }
   window.toggleClock = toggleClock;
 
   async function addNowEntryForAll(){
-    const activeIds = dbCache.employees.filter(e=>e.active!==false).map(e=>e.id);
-    const t = now().toISOString();
-    for(const id of activeIds){ if(!activeEntryFor(id)) await addEntryFB({ id: gid(), employeeId: id, start: t, end: null }); }
+    const t=now().toISOString();
+    for(const e of dbCache.employees){
+      if(e.active===false) continue;
+      if(!activeEntryFor(e.id)) await addEntry({id:gid(), employeeId:e.id, start:t, end:null});
+    }
     refreshDashboard(); renderEmployeePicker();
   }
   window.addNowEntryForAll = addNowEntryForAll;
 
   function refreshDashboard(){
-    const empId = dbCache.lastEmployeeId || (dbCache.employees[0]?.id || '');
-    if(!empId){ document.getElementById('kpi-state').textContent='—'; return; }
-    const emp = dbCache.employees.find(e=>e.id===empId);
-    const active = activeEntryFor(empId);
-    const btn = document.getElementById('btn-clock');
+    const empId = dbCache.lastEmployeeId || dbCache.employees[0]?.id;
     const lang = localStorage.getItem('lang')||'ro';
-    if(active){ document.getElementById('kpi-state').textContent = `${emp.name} este ÎN PROGRAM`; btn.classList.remove('success'); btn.classList.add('danger'); btn.textContent = lang==='it' ? 'Registra uscita' : 'Înregistrează ieșirea'; }
-    else { document.getElementById('kpi-state').textContent = `${emp.name} este ÎN AFARA PROGRAMULUI`; btn.classList.add('success'); btn.classList.remove('danger'); btn.textContent = lang==='it' ? 'Registra entrata' : 'Înregistrează intrarea'; }
+    const btn = document.getElementById('btn-clock');
+    if(!empId){ document.getElementById('kpi-state').textContent='—'; btn.textContent=STR[lang].btn_checkin; return; }
+    const emp = dbCache.employees.find(x=>x.id===empId);
+    const active = activeEntryFor(empId);
+    if(active){ document.getElementById('kpi-state').textContent = `${emp.name} este ÎN PROGRAM`; btn.classList.remove('success'); btn.classList.add('danger'); btn.textContent = (lang==='it'?'Registra uscita':'Înregistrează ieșirea'); }
+    else{ document.getElementById('kpi-state').textContent = `${emp.name} este ÎN AFARA PROGRAMULUI`; btn.classList.add('success'); btn.classList.remove('danger'); btn.textContent = STR[lang].btn_checkin; }
+    const last = entriesFor(empId).filter(e=>e.end!=null).sort((a,b)=>new Date(b.end)-new Date(a.end))[0];
+    document.getElementById('kpi-last').textContent = last ? `Ultima: ${fmtDate(new Date(last.start))}, ${fmtTime(new Date(last.start))} – ${fmtTime(new Date(last.end))} (${fmtDuration(durationOf(last))})` : (lang==='it'?'Ultima sessione: —':'Ultima sesiune: —');
+    const live = active? fmtDuration(durationOf(active)) : '00:00';
+    document.getElementById('kpi-live').textContent = (lang==='it'?'Durata attuale: ':'Durată curentă: ') + live;
 
-    const empEntries = entriesFor(empId).filter(e=>e.end!=null).sort((a,b)=>new Date(b.end)-new Date(a.end));
-    const last = empEntries[0];
-    const lastLabel = lang==='it' ? 'Ultima:' : 'Ultima:';
-    const liveLabel = lang==='it' ? 'Durata attuale:' : 'Durată curentă:';
-    document.getElementById('kpi-last').textContent = last ? `${lastLabel} ${fmtDate(new Date(last.start))}, ${fmtTime(new Date(last.start))} – ${fmtTime(new Date(last.end))} (${fmtDuration(durationOf(last))})` : (lang==='it'?'Ultima sessione: —':'Ultima sesiune: —');
-    const activeEntry = activeEntryFor(empId);
-    document.getElementById('kpi-live').textContent = `${liveLabel} ` + (activeEntry? fmtDuration(durationOf(activeEntry)) : '00:00');
-
-    const rows = todayEntriesFor(empId).sort((a,b)=>new Date(a.start)-new Date(b.start)).map(e=>{
-      const d = new Date(e.start);
-      return `<tr>
-        <td>${fmtDate(d)}</td>
+    const rows = todayEntriesFor(empId).sort((a,b)=>new Date(a.start)-new Date(b.start)).map(e=>`
+      <tr>
+        <td>${fmtDate(new Date(e.start))}</td>
         <td>${fmtTime(new Date(e.start))}</td>
         <td>${e.end?fmtTime(new Date(e.end)):'—'}</td>
         <td>${fmtDuration(durationOf(e))}</td>
-        <td><button class="btn ghost" onclick="editEntry('${e.id}')">Edit</button> <button class="btn ghost" onclick="removeEntry('${e.id}')">Delete</button></td>
-      </tr>`;
-    }).join('');
+        <td><button class="btn ghost" onclick="editEntry('${e.id}')">Edit</button> <button class="btn ghost" onclick="delEntry('${e.id}')">Delete</button></td>
+      </tr>`).join('');
     document.getElementById('today-rows').innerHTML = rows || `<tr><td colspan="5" class="muted">—</td></tr>`;
   }
   window.refreshDashboard = refreshDashboard;
 
   async function editEntry(id){
-    const e = dbCache.entries.find(x=>x.id===id); if(!e) return;
-    const ds = prompt('Data (YYYY-MM-DD):', e.start.slice(0,10)); if(!ds) return;
-    const ts = prompt('Start (HH:MM):', e.start.slice(11,16)); if(!ts) return;
-    const de = prompt('Stop (HH:MM) (lasă gol dacă activ):', e.end? e.end.slice(11,16):'');
-    const start = new Date(`${ds}T${ts}:00`);
-    let end = null; if(de && de.trim()) end = new Date(`${ds}T${de}:00`).toISOString();
-    e.start = start.toISOString(); e.end = end;
-    await updateEntryFB(e); refreshDashboard(); runReport();
+    const e=dbCache.entries.find(x=>x.id===id); if(!e) return;
+    const ds=prompt('Data (YYYY-MM-DD):', e.start.slice(0,10)); if(!ds) return;
+    const ts=prompt('Start (HH:MM):', e.start.slice(11,16)); if(!ts) return;
+    const de=prompt('Stop (HH:MM) (gol dacă activ):', e.end?e.end.slice(11,16):'');
+    e.start=new Date(`${ds}T${ts}:00`).toISOString(); e.end = de? new Date(`${ds}T${de}:00`).toISOString() : null;
+    await saveEntry(e); refreshDashboard(); runReport();
   }
   window.editEntry = editEntry;
+  async function delEntry(id){ if(!confirm('Ștergi această sesiune?')) return; await removeEntry(id); refreshDashboard(); runReport(); }
+  window.delEntry = delEntry;
 
-  async function removeEntry(id){ if(!confirm('Ștergi această sesiune?')) return; await removeEntryFB(id); refreshDashboard(); runReport(); }
-  window.removeEntry = removeEntry;
-
+  /***** Admin CRUD *****/
   async function createEmployee(){
-    const name = document.getElementById('emp-name').value.trim(); if(!name){ alert('Te rog numele.'); return; }
-    const role = document.getElementById('emp-role').value.trim();
-    const rate = parseFloat(document.getElementById('emp-rate').value||'');
-    const emp = { id: gid(), name, role: role||'', rate: isFinite(rate)? rate: null, active: true };
-    await upsertEmployee(emp);
+    const name=document.getElementById('emp-name').value.trim(); if(!name){ alert('Te rog numele.'); return; }
+    const role=document.getElementById('emp-role').value.trim();
+    const rate=parseFloat(document.getElementById('emp-rate').value||'');
+    const w={id:gid(), name, role:role||'', rate:isFinite(rate)?rate:null, active:true};
+    await upsertWorker(w);
     document.getElementById('emp-name').value=''; document.getElementById('emp-role').value=''; document.getElementById('emp-rate').value='';
   }
   window.createEmployee = createEmployee;
 
   function renderEmployees(){
-    const rows = dbCache.employees.map(e=>{
-      return `<tr>
+    const rows=dbCache.employees.map(e=>`
+      <tr>
         <td>${e.name}</td>
         <td>${e.role||'—'}</td>
-        <td>${e.rate!=null? e.rate.toFixed(2): '—'}</td>
+        <td>${e.rate!=null?e.rate.toFixed(2):'—'}</td>
         <td>${e.active!==false?'<span class="pill">Activ</span>':'<span class="pill" style="background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.35);color:#b91c1c">Inactiv</span>'}</td>
         <td>
           <button class="btn ghost" onclick="editEmployee('${e.id}')">Editează</button>
-          <button class="btn ghost" onclick="toggleActive('${e.id}')">${e.active!==false?'Dezactivează':'Activează'}</button>
-          <button class="btn danger" onclick="deleteEmployee('${e.id}')">Șterge</button>
+          <button class="btn ghost" onclick="setActive('${e.id}', ${!(e.active!==false)})">${e.active!==false?'Dezactivează':'Activează'}</button>
+          <button class="btn danger" onclick="deleteEmp('${e.id}')">Șterge</button>
         </td>
-      </tr>`
-    }).join('');
+      </tr>`).join('');
     document.getElementById('emp-rows').innerHTML = rows || `<tr><td colspan="5" class="muted">Adaugă primul lucrător.</td></tr>`;
     document.getElementById('emp-count').textContent = dbCache.employees.length;
   }
   window.renderEmployees = renderEmployees;
 
   async function editEmployee(id){
-    const e = dbCache.employees.find(x=>x.id===id); if(!e) return;
-    const name = prompt('Nume:', e.name); if(!name) return;
-    const role = prompt('Funcția (opțional):', e.role||'');
-    const rate = prompt('Tarif/oră (opțional):', e.rate!=null? e.rate: '');
-    const upd = { ...e, name: name.trim(), role: (role||'').trim(), rate: rate!==''? Math.max(0, parseFloat(rate)): null };
-    await upsertEmployee(upd);
+    const e=dbCache.employees.find(x=>x.id===id); if(!e) return;
+    const name=prompt('Nume:', e.name); if(!name) return;
+    const role=prompt('Funcția (opțional):', e.role||'');
+    const rate=prompt('Tarif/oră (opțional):', e.rate!=null?e.rate:'');
+    await upsertWorker({...e, name:name.trim(), role:(role||'').trim(), rate: rate!==''? Math.max(0,parseFloat(rate)): null});
   }
   window.editEmployee = editEmployee;
+  async function setActive(id, to){ await toggleActive(id, to); }
+  window.setActive = setActive;
+  async function deleteEmp(id){ if(!confirm('Ștergi lucrătorul? (pontajele rămân)')) return; await deleteWorker(id); }
+  window.deleteEmp = deleteEmp;
 
-  async function toggleActive(id){ const e = dbCache.employees.find(x=>x.id===id); if(!e) return; await toggleActiveFB(id, !(e.active!==false)); }
-  window.toggleActive = toggleActive;
-
-  async function deleteEmployee(id){ if(!confirm('Ștergi lucrătorul? (pontajele rămân în istoric)')) return; await deleteEmployeeFB(id); }
-  window.deleteEmployee = deleteEmployee;
-
-  async function addManualEntry(){
-    const empId = document.getElementById('manual-employee').value;
-    const ds = document.getElementById('manual-date').value;
-    const ts = document.getElementById('manual-start').value;
-    const te = document.getElementById('manual-end').value;
-    if(!empId||!ds||!ts||!te){ alert('Completează toate câmpurile.'); return; }
-    const start = new Date(`${ds}T${ts}:00`);
-    const end = new Date(`${ds}T${te}:00`);
-    if(end<=start){ alert('Stop trebuie să fie după start.'); return; }
-    if(activeEntryFor(empId)){ alert('Există o sesiune deschisă. Închide-o înainte de a adăuga manual.'); return; }
-    await addEntryFB({ id: gid(), employeeId: empId, start: start.toISOString(), end: end.toISOString() });
-    document.getElementById('manual-start').value=''; document.getElementById('manual-end').value='';
+  function populateEmployeeSelects(){
+    const options = dbCache.employees.map(e=>`<option value="${e.id}">${e.name}${e.active===false?' (inactiv)':''}</option>`).join('');
+    const m=document.getElementById('manual-employee'); if(m) m.innerHTML = options;
+    const r=document.getElementById('rep-employee'); if(r) r.innerHTML = `<option value="all">Toți</option>`+options;
   }
-  window.addManualEntry = addManualEntry;
+  window.populateEmployeeSelects = populateEmployeeSelects;
 
-  function toggleCustomDates(){ const v = document.getElementById('rep-range').value; document.getElementById('rep-custom').classList.toggle('hidden', v!=='custom'); }
+  /***** Reports *****/
+  function toggleCustomDates(){ const v=document.getElementById('rep-range').value; document.getElementById('rep-custom').classList.toggle('hidden', v!=='custom'); }
   window.toggleCustomDates = toggleCustomDates;
 
   function getRange(){
-    const v = document.getElementById('rep-range').value; const d = now(); let from, to;
-    const startOfWeek = (date)=>{ const t = new Date(date); const day=(t.getDay()+6)%7; t.setHours(0,0,0,0); t.setDate(t.getDate()-day); return t; }
-    const endOfDay = (date)=>{ const t=new Date(date); t.setHours(23,59,59,999); return t; };
-    if(v==='thisWeek'){ from = startOfWeek(d); to = endOfDay(new Date(startOfWeek(d).getTime()+6*86400000)); }
-    else if(v==='lastWeek'){ const s = new Date(startOfWeek(d).getTime()-7*86400000); from=s; to=endOfDay(new Date(s.getTime()+6*86400000)); }
-    else if(v==='thisMonth'){ from=new Date(d.getFullYear(), d.getMonth(),1); to=endOfDay(new Date(d.getFullYear(), d.getMonth()+1,0)); }
-    else if(v==='lastMonth'){ from=new Date(d.getFullYear(), d.getMonth()-1,1); to=endOfDay(new Date(d.getFullYear(), d.getMonth(),0)); }
+    const v=document.getElementById('rep-range').value; const d=now(); let from,to;
+    const startOfWeek=(date)=>{ const t=new Date(date); const dow=(t.getDay()+6)%7; t.setHours(0,0,0,0); t.setDate(t.getDate()-dow); return t; };
+    const endOfDay=(date)=>{ const t=new Date(date); t.setHours(23,59,59,999); return t; };
+    if(v==='thisWeek'){ from=startOfWeek(d); to=endOfDay(new Date(from.getTime()+6*86400000)); }
+    else if(v==='lastWeek'){ const s=new Date(startOfWeek(d).getTime()-7*86400000); from=s; to=endOfDay(new Date(s.getTime()+6*86400000)); }
+    else if(v==='thisMonth'){ from=new Date(d.getFullYear(),d.getMonth(),1); to=endOfDay(new Date(d.getFullYear(),d.getMonth()+1,0)); }
+    else if(v==='lastMonth'){ from=new Date(d.getFullYear(),d.getMonth()-1,1); to=endOfDay(new Date(d.getFullYear(),d.getMonth(),0)); }
     else if(v==='thisYear'){ from=new Date(d.getFullYear(),0,1); to=endOfDay(new Date(d.getFullYear(),11,31)); }
-    else { const f = document.getElementById('rep-from').value, t = document.getElementById('rep-to').value; if(!f||!t){ alert('Alege intervalul.'); return null; } from = new Date(f+'T00:00:00'); to = endOfDay(new Date(t+'T00:00:00')); }
+    else { const f=document.getElementById('rep-from').value, t=document.getElementById('rep-to').value; if(!f||!t){ alert('Alege intervalul.'); return null; } from=new Date(f+'T00:00:00'); to=endOfDay(new Date(t+'T00:00:00')); }
     return {from,to};
   }
 
   function runReport(){
-    const empSel = document.getElementById('rep-employee').value || 'all';
-    const range = getRange(); if(!range) return; const {from,to} = range;
-    const filtered = dbCache.entries.filter(e=>{ const s = new Date(e.start); const en = e.end? new Date(e.end): now(); return en>=from && s<=to && (empSel==='all' || e.employeeId===empSel); }).sort((a,b)=> new Date(a.start)-new Date(b.start));
-    const rows = filtered.map(e=>{ const emp = dbCache.employees.find(x=>x.id===e.employeeId); const d = new Date(e.start); return `<tr><td>${emp?emp.name:'—'}</td><td>${fmtDate(d)}</td><td>${fmtTime(new Date(e.start))}</td><td>${e.end? fmtTime(new Date(e.end)):'—'}</td><td>${fmtDuration(durationOf(e))}</td></tr>`; }).join('');
+    const sel=document.getElementById('rep-employee').value||'all';
+    const range=getRange(); if(!range) return; const {from,to}=range;
+    const filtered = dbCache.entries
+      .filter(e=>{ const s=new Date(e.start); const en=e.end?new Date(e.end):now(); return en>=from && s<=to && (sel==='all'||e.employeeId===sel); })
+      .sort((a,b)=>new Date(a.start)-new Date(b.start));
+    const rows=filtered.map(e=>{
+      const w=dbCache.employees.find(x=>x.id===e.employeeId);
+      return `<tr><td>${w?w.name:'—'}</td><td>${fmtDate(new Date(e.start))}</td><td>${fmtTime(new Date(e.start))}</td><td>${e.end?fmtTime(new Date(e.end)):'—'}</td><td>${fmtDuration(durationOf(e))}</td></tr>`;
+    }).join('');
     document.getElementById('rep-rows').innerHTML = rows || `<tr><td colspan="5" class="muted">Fără date.</td></tr>`;
-    const map = new Map(); filtered.forEach(e=>{ const ms = durationOf(e); map.set(e.employeeId, (map.get(e.employeeId)||0)+ms); });
-    const items = []; let grand = 0, grandCost = 0;
-    map.forEach((ms, empId)=>{ grand += ms; const emp = dbCache.employees.find(x=>x.id===empId); const hours = (ms/3600000); const cost = emp?.rate!=null? hours*emp.rate: null; if(cost!=null) grandCost += cost; items.push(`<span class="pill">${emp?emp.name:'—'} · ${hours.toFixed(2)}h${cost!=null?` · ${cost.toFixed(2)} EUR`:''}</span>`); });
-    const sumHtml = `<div class="kpi"><h3 style="margin:0">Total: ${(grand/3600000).toFixed(2)} ore</h3></div>${grandCost>0? `<span class="pill">Cost estimat: ${grandCost.toFixed(2)} EUR</span>`:''}`;
-    document.getElementById('rep-summary').innerHTML = sumHtml;
+
+    const map=new Map(); filtered.forEach(e=>map.set(e.employeeId,(map.get(e.employeeId)||0)+durationOf(e)));
+    let total=0; const chips=[]; map.forEach((ms,id)=>{ total+=ms; const w=dbCache.employees.find(x=>x.id===id); chips.push(`<span class="pill">${w?w.name:'—'} · ${(ms/3600000).toFixed(2)}h</span>`); });
+    document.getElementById('rep-summary').innerHTML = `<h3 style="margin:0">Total: ${(total/3600000).toFixed(2)} ore</h3>` + (chips.length? ' '+chips.join(' ') : '');
   }
   window.runReport = runReport;
 
   function exportCSV(){
-    const empSel = document.getElementById('rep-employee').value || 'all';
-    const range = getRange(); if(!range) return; const {from,to}=range;
-    const filtered = dbCache.entries.filter(e=>{ const s = new Date(e.start); const en = e.end? new Date(e.end): now(); return en>=from && s<=to && (empSel==='all' || e.employeeId===empSel); }).sort((a,b)=> new Date(a.start)-new Date(b.start));
-    const head = ['Employee','Date','Start','End','Duration(h)'];
-    const rows = filtered.map(e=>{ const emp=dbCache.employees.find(x=>x.id===e.employeeId); const dur=durationOf(e)/3600000; return [emp?emp.name:'', e.start.slice(0,10), e.start.slice(11,16), e.end? e.end.slice(11,16):'', dur.toFixed(2)]; });
-    const csv = [head,...rows].map(r=>r.map(x=>`"${(x||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
-    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href=url; a.download='raport.csv'; a.click(); URL.revokeObjectURL(url);
+    const sel=document.getElementById('rep-employee').value||'all';
+    const range=getRange(); if(!range) return; const {from,to}=range;
+    const filtered = dbCache.entries
+      .filter(e=>{ const s=new Date(e.start); const en=e.end?new Date(e.end):now(); return en>=from && s<=to && (sel==='all'||e.employeeId===sel); })
+      .sort((a,b)=>new Date(a.start)-new Date(b.start));
+    const head=['Employee','Date','Start','End','Duration(h)'];
+    const rows = filtered.map(e=>{
+      const w=dbCache.employees.find(x=>x.id===e.employeeId); const dur=durationOf(e)/3600000;
+      return [w?w.name:'', e.start.slice(0,10), e.start.slice(11,16), e.end?e.end.slice(11,16):'', dur.toFixed(2)];
+    });
+    const csv=[head,...rows].map(r=>r.map(x=>`"${String(x||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download='raport.csv'; a.click(); URL.revokeObjectURL(url);
   }
   window.exportCSV = exportCSV;
 
-  function durationOf(e){ const s = new Date(e.start).getTime(); const en = (e.end? new Date(e.end): now()).getTime(); return Math.max(0, en - s); }
-  function fmtDuration(ms){ const h = Math.floor(ms/3600000); const m = Math.round((ms%3600000)/60000); const pad=(n)=> String(n).padStart(2,'0'); return `${pad(h)}:${pad(m)}`; }
-
-  function exportData(){ const snapshot = { employees: dbCache.employees, entries: dbCache.entries, lastEmployeeId: dbCache.lastEmployeeId, autoOut: dbCache.autoOut }; const blob = new Blob([JSON.stringify(snapshot,null,2)],{type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='time-attendance-backup.json'; a.click(); URL.revokeObjectURL(url); }
-  window.exportData = exportData;
-
-  async function resetAll(){ if(!confirm('Sigur vrei resetare totală?')) return; await set(ref(rtdb, EMP_NODE), {}); await set(ref(rtdb, 'entries'), {}); await set(ref(rtdb, 'meta'), { lastEmployeeId: null, autoOut: {enabled:false,time:"18:00"} }); }
-  window.resetAll = resetAll;
-
-  document.getElementById('import-file').addEventListener('change', async (ev)=>{
-    const file = ev.target.files?.[0]; if(!file) return; const text = await file.text();
-    try{
-      const data = JSON.parse(text);
-      const employeesObj = (data.employees||[]).reduce((acc,e)=>{ acc[e.id]=e; return acc; },{});
-      const entriesObj = (data.entries||[]).reduce((acc,en)=>{ acc[en.id]=en; return acc; },{});
-      await set(ref(rtdb, EMP_NODE), employeesObj);
-      await set(ref(rtdb, 'entries'), entriesObj);
-      await set(ref(rtdb, 'meta/lastEmployeeId'), data.lastEmployeeId || null);
-      if(data.autoOut){ await set(ref(rtdb, 'meta/autoOut'), data.autoOut); }
-    }catch(err){ alert('Import eșuat: '+err.message); }
-  });
-
-  // ===== Auto checkout sweep (runs on load and every 60s) =====
-  function timeToDate(date, hhmm){ const [h,m] = (hhmm||'18:00').split(':').map(x=>parseInt(x,10)); const d = new Date(date); d.setHours(h||18, m||0, 0, 0); return d; }
+  /***** Auto checkout (retroactiv) *****/
+  const timeToDate = (date,hhmm)=>{ const [h,m]=(hhmm||'18:00').split(':').map(n=>parseInt(n,10)); const d=new Date(date); d.setHours(h||18,m||0,0,0); return d; };
   async function autoCheckoutSweep(){
-    const cfg = dbCache.autoOut; if(!cfg?.enabled) return;
-    const nowD = now();
+    if(!dbCache.autoOut?.enabled) return;
+    const cfg=dbCache.autoOut; const nowD=now();
     for(const e of dbCache.entries){
       if(e.end!=null) continue;
-      const startD = new Date(e.start);
-      const cutoff = timeToDate(startD, cfg.time);
-      // Retroactiv: închide la cutoff-ul zilei în care a început sesiunea
-      if(nowD.getTime() >= cutoff.getTime()){
-        e.end = cutoff.toISOString();
-        await updateEntryFB(e);
+      const cutoff=timeToDate(new Date(e.start), cfg.time);
+      if(nowD.getTime()>=cutoff.getTime()){
+        e.end=cutoff.toISOString();
+        await saveEntry(e);
       }
     }
   }
   setInterval(autoCheckoutSweep, 60000);
 
-  // ===== Firebase Real-time listeners with EMP_NODE detection =====
-  async function attachListeners(){
-    try {
-      const wSnap = await get(ref(rtdb, 'workers'));
-      if (wSnap.exists() && wSnap.val() && Object.keys(wSnap.val()).length > 0) {
-        EMP_NODE = 'workers';
-      }
-    } catch (e) {}
-
-    onValue(ref(rtdb, EMP_NODE), (snap)=>{
-      dbCache.employees = normalizeEmployees(snap.val());
+  /***** Listeners *****/
+  function attachListeners(){
+    onValue(ref(rtdb,'workers'), snap=>{
+      dbCache.employees = normalizeWorkers(snap.val());
       renderEmployees(); populateEmployeeSelects(); renderEmployeePicker(); refreshDashboard();
     });
-    onValue(ref(rtdb, 'entries'), (snap)=>{
+    onValue(ref(rtdb,'entries'), snap=>{
       dbCache.entries = objToArr(snap.val());
       refreshDashboard(); renderEmployeePicker(); runReport(); autoCheckoutSweep();
     });
-    onValue(ref(rtdb, 'meta/lastEmployeeId'), (snap)=>{
+    onValue(ref(rtdb,'meta/lastEmployeeId'), snap=>{
       dbCache.lastEmployeeId = snap.val();
       refreshDashboard(); renderEmployeePicker();
     });
-    onValue(ref(rtdb, 'meta/autoOut'), (snap)=>{
+    onValue(ref(rtdb,'meta/autoOut'), snap=>{
       dbCache.autoOut = snap.val() || {enabled:false,time:'18:00'};
-      const en = document.getElementById('autoout-enabled'); const tt = document.getElementById('autoout-time');
-      if(en) en.checked = !!dbCache.autoOut.enabled; if(tt) tt.value = dbCache.autoOut.time || '18:00';
+      const en=document.getElementById('autoout-enabled'); const tt=document.getElementById('autoout-time');
+      if(en) en.checked=!!dbCache.autoOut.enabled; if(tt) tt.value=dbCache.autoOut.time||'18:00';
     });
   }
 
-  // ===== Init =====
+  /***** Init *****/
   (function init(){
     document.getElementById('version').textContent = APP_VERSION + ' • Firebase RTDB';
-    const today = new Date(); const fmt = (d)=> d.toISOString().slice(0,10);
-    document.getElementById('rep-from').value = fmt(new Date(today.getFullYear(), today.getMonth(), 1));
-    document.getElementById('rep-to').value = fmt(today);
     document.getElementById('langSel').value = localStorage.getItem('lang')||'ro';
     applyI18n();
     signInAnonymously(auth).catch(()=>{});
-    onAuthStateChanged(auth, (user)=>{ if(user){ attachListeners(); autoCheckoutSweep(); } });
+    onAuthStateChanged(auth, user=>{ if(user){ attachListeners(); autoCheckoutSweep(); } });
+    const today=new Date(); const fmt=d=>d.toISOString().slice(0,10);
+    document.getElementById('rep-from').value = fmt(new Date(today.getFullYear(), today.getMonth(), 1));
+    document.getElementById('rep-to').value = fmt(today);
   })();
   </script>
 </body>
